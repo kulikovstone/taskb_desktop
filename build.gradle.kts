@@ -15,6 +15,10 @@ repositories {
 dependencies {
     implementation(compose.desktop.currentOs)
     implementation("org.jetbrains.compose.material:material:1.12.2")
+    implementation("org.xerial:sqlite-jdbc:3.53.4.0")
+    implementation("org.jetbrains.exposed:exposed-core:1.6.0")
+    implementation("org.jetbrains.exposed:exposed-jdbc:1.6.0")
+    runtimeOnly("org.slf4j:slf4j-simple:2.0.17")
     testImplementation(kotlin("test"))
 }
 
@@ -36,6 +40,7 @@ compose.desktop {
         nativeDistributions {
             packageName = "TaskB"
             packageVersion = "0.1.0"
+            modules("java.sql")
 
             windows {
                 iconFile.set(project.file("packaging/icons/taskb.ico"))
