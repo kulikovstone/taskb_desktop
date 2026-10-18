@@ -20,6 +20,8 @@ dependencies {
     implementation(libs.room.runtime)
     implementation(libs.sqlite.bundled)
     implementation(libs.kotlinx.coroutines.core)
+    implementation(libs.koin.core)
+    implementation(libs.koin.compose)
     ksp(libs.room.compiler)
     testImplementation(libs.kotlin.test)
     testImplementation(libs.compose.ui.test)
