@@ -1,7 +1,7 @@
 plugins {
-    kotlin("jvm") version "2.4.20"
-    id("org.jetbrains.compose") version "1.12.2"
-    id("org.jetbrains.kotlin.plugin.compose") version "2.4.20"
+    alias(libs.plugins.kotlin.jvm)
+    alias(libs.plugins.compose.multiplatform)
+    alias(libs.plugins.compose.compiler)
 }
 
 group = "com.mkulikov.taskb"
@@ -14,19 +14,12 @@ repositories {
 
 dependencies {
     implementation(compose.desktop.currentOs)
-    implementation("org.jetbrains.compose.material:material:1.12.2")
-    val materialSymbolsVersion = "2.2.1"
-    implementation("com.composables:icons-material-symbols-outlined-cmp:$materialSymbolsVersion")
-    implementation("com.composables:icons-material-symbols-rounded-cmp:$materialSymbolsVersion")
-    implementation("com.composables:icons-material-symbols-sharp-cmp:$materialSymbolsVersion")
-    implementation("com.composables:icons-material-symbols-outlined-filled-cmp:$materialSymbolsVersion")
-    implementation("com.composables:icons-material-symbols-rounded-filled-cmp:$materialSymbolsVersion")
-    implementation("com.composables:icons-material-symbols-sharp-filled-cmp:$materialSymbolsVersion")
-    implementation("org.xerial:sqlite-jdbc:3.53.4.0")
-    implementation("org.jetbrains.exposed:exposed-core:1.6.0")
-    implementation("org.jetbrains.exposed:exposed-jdbc:1.6.0")
-    runtimeOnly("org.slf4j:slf4j-simple:2.0.17")
-    testImplementation(kotlin("test"))
+    implementation(libs.compose.material)
+    implementation(libs.bundles.materialSymbols)
+    implementation(libs.sqlite.jdbc)
+    implementation(libs.bundles.exposed)
+    runtimeOnly(libs.slf4j.simple)
+    testImplementation(libs.kotlin.test)
 }
 
 kotlin {

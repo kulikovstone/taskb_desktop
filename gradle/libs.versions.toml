@@ -1,0 +1,39 @@
+[versions]
+kotlin = "2.4.20"
+compose = "1.12.2"
+materialSymbols = "2.2.1"
+sqliteJdbc = "3.53.4.0"
+exposed = "1.6.0"
+slf4j = "2.0.17"
+
+[libraries]
+compose-material = { module = "org.jetbrains.compose.material:material", version.ref = "compose" }
+
+materialSymbols-outlined = { module = "com.composables:icons-material-symbols-outlined-cmp", version.ref = "materialSymbols" }
+materialSymbols-rounded = { module = "com.composables:icons-material-symbols-rounded-cmp", version.ref = "materialSymbols" }
+materialSymbols-sharp = { module = "com.composables:icons-material-symbols-sharp-cmp", version.ref = "materialSymbols" }
+materialSymbols-outlinedFilled = { module = "com.composables:icons-material-symbols-outlined-filled-cmp", version.ref = "materialSymbols" }
+materialSymbols-roundedFilled = { module = "com.composables:icons-material-symbols-rounded-filled-cmp", version.ref = "materialSymbols" }
+materialSymbols-sharpFilled = { module = "com.composables:icons-material-symbols-sharp-filled-cmp", version.ref = "materialSymbols" }
+
+sqlite-jdbc = { module = "org.xerial:sqlite-jdbc", version.ref = "sqliteJdbc" }
+exposed-core = { module = "org.jetbrains.exposed:exposed-core", version.ref = "exposed" }
+exposed-jdbc = { module = "org.jetbrains.exposed:exposed-jdbc", version.ref = "exposed" }
+slf4j-simple = { module = "org.slf4j:slf4j-simple", version.ref = "slf4j" }
+kotlin-test = { module = "org.jetbrains.kotlin:kotlin-test", version.ref = "kotlin" }
+
+[bundles]
+materialSymbols = [
+    "materialSymbols-outlined",
+    "materialSymbols-rounded",
+    "materialSymbols-sharp",
+    "materialSymbols-outlinedFilled",
+    "materialSymbols-roundedFilled",
+    "materialSymbols-sharpFilled",
+]
+exposed = ["exposed-core", "exposed-jdbc"]
+
+[plugins]
+kotlin-jvm = { id = "org.jetbrains.kotlin.jvm", version.ref = "kotlin" }
+compose-multiplatform = { id = "org.jetbrains.compose", version.ref = "compose" }
+compose-compiler = { id = "org.jetbrains.kotlin.plugin.compose", version.ref = "kotlin" }
