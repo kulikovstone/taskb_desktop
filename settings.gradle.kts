@@ -10,3 +10,20 @@ plugins {
     id("org.gradle.toolchains.foojay-resolver-convention") version "1.0.0"
 }
 rootProject.name = "taskb_desktop"
+
+dependencyResolutionManagement {
+    repositories {
+        google()
+        mavenCentral()
+    }
+}
+
+include(
+    ":app",
+    ":feature:hello",
+    ":feature:hello:api",
+    ":feature:home",
+    ":feature:home:api",
+    ":feature:task",
+    ":feature:task:api",
+)

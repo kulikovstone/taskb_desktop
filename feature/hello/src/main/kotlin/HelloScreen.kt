@@ -1,4 +1,4 @@
-package com.mkulikov.taskb
+package com.mkulikov.taskb.feature.hello
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -12,10 +12,8 @@ import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.Button
 import androidx.compose.material.CircularProgressIndicator
 import androidx.compose.material.MaterialTheme
-import androidx.compose.material.Surface
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -29,57 +27,11 @@ import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.launch
 
 @Composable
-internal fun TaskBApp(settings: AppSettings) {
-    var hasCompletedWelcome by remember { mutableStateOf(false) }
-    var isLoading by remember { mutableStateOf(true) }
+internal fun HelloScreen(initialError: String?, onContinue: suspend () -> Unit) {
     var isContinuing by remember { mutableStateOf(false) }
-    var error by remember { mutableStateOf<String?>(null) }
+    var error by remember(initialError) { mutableStateOf(initialError) }
     val scope = rememberCoroutineScope()
 
-    LaunchedEffect(settings) {
-        try {
-            hasCompletedWelcome = settings.hasCompletedWelcome()
-        } catch (exception: CancellationException) {
-            throw exception
-        } catch (_: Exception) {
-            error = "Не удалось прочитать настройки. Нажмите «Продолжить», чтобы начать работу."
-        } finally {
-            isLoading = false
-        }
-    }
-
-    Surface(modifier = Modifier.fillMaxSize()) {
-        when {
-            isLoading -> Box(Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
-                CircularProgressIndicator()
-            }
-            hasCompletedWelcome -> HomeScreen()
-            else -> WelcomeScreen(
-                isContinuing = isContinuing,
-                error = error,
-                onContinue = {
-                    isContinuing = true
-                    error = null
-                    scope.launch {
-                        try {
-                            settings.completeWelcome()
-                            hasCompletedWelcome = true
-                        } catch (exception: CancellationException) {
-                            throw exception
-                        } catch (_: Exception) {
-                            error = "Не удалось сохранить настройки. Попробуйте ещё раз."
-                        } finally {
-                            isContinuing = false
-                        }
-                    }
-                }
-            )
-        }
-    }
-}
-
-@Composable
-private fun WelcomeScreen(isContinuing: Boolean, error: String?, onContinue: () -> Unit) {
     Box(
         modifier = Modifier.fillMaxSize().padding(32.dp),
         contentAlignment = Alignment.Center
@@ -94,7 +46,24 @@ private fun WelcomeScreen(isContinuing: Boolean, error: String?, onContinue: () 
                 style = MaterialTheme.typography.h4,
                 textAlign = TextAlign.Center
             )
-            Button(onClick = onContinue, enabled = !isContinuing) {
+            Button(
+                onClick = {
+                    isContinuing = true
+                    error = null
+                    scope.launch {
+                        try {
+                            onContinue()
+                        } catch (exception: CancellationException) {
+                            throw exception
+                        } catch (_: Exception) {
+                            error = "Не удалось сохранить настройки. Попробуйте ещё раз."
+                        } finally {
+                            isContinuing = false
+                        }
+                    }
+                },
+                enabled = !isContinuing
+            ) {
                 if (isContinuing) {
                     CircularProgressIndicator(modifier = Modifier.size(20.dp), strokeWidth = 2.dp)
                 } else {
@@ -103,7 +72,7 @@ private fun WelcomeScreen(isContinuing: Boolean, error: String?, onContinue: () 
             }
             if (error != null) {
                 Text(
-                    text = error,
+                    text = error.orEmpty(),
                     color = MaterialTheme.colors.error,
                     style = MaterialTheme.typography.body2,
                     textAlign = TextAlign.Center
@@ -111,9 +80,4 @@ private fun WelcomeScreen(isContinuing: Boolean, error: String?, onContinue: () 
             }
         }
     }
-}
-
-@Composable
-private fun HomeScreen() {
-    Box(modifier = Modifier.fillMaxSize())
 }
