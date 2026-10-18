@@ -1,8 +1,8 @@
-package com.mkulikov.taskb
+package com.mkulikov.taskb.core.database
 
 import java.nio.file.Path
 
-internal object AppPaths {
+object DatabasePaths {
     fun databaseFile(): Path {
         val home = Path.of(System.getProperty("user.home"))
         val directory = when {

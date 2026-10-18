@@ -1,4 +1,4 @@
-package com.mkulikov.taskb.storage
+package com.mkulikov.taskb.core.database
 
 import androidx.room3.Database
 import androidx.room3.Room
@@ -6,7 +6,6 @@ import androidx.room3.RoomDatabase
 import androidx.sqlite.SQLiteConnection
 import androidx.sqlite.SQLiteDriver
 import androidx.sqlite.driver.bundled.BundledSQLiteDriver
-import com.mkulikov.taskb.AppPaths
 import kotlinx.coroutines.Dispatchers
 import java.nio.file.Files
 import java.nio.file.Path
@@ -16,7 +15,7 @@ internal abstract class AppDatabase : RoomDatabase() {
     abstract fun settingsDao(): AppSettingsDao
 
     companion object {
-        fun open(file: Path = AppPaths.databaseFile()): AppDatabase {
+        fun open(file: Path = DatabasePaths.databaseFile()): AppDatabase {
             val absoluteFile = file.toAbsolutePath().normalize()
             Files.createDirectories(absoluteFile.parent)
             return Room.databaseBuilder<AppDatabase>(name = absoluteFile.toString())

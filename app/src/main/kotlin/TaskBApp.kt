@@ -13,19 +13,18 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.navigation3.runtime.NavKey
-import androidx.navigation3.runtime.entryProvider
-import androidx.navigation3.ui.NavDisplay
-import com.mkulikov.taskb.feature.hello.helloEntry
-import com.mkulikov.taskb.feature.home.homeEntry
-import com.mkulikov.taskb.feature.task.taskEntry
+import com.mkulikov.taskb.core.database.AppSettings
+import com.mkulikov.taskb.core.navigation.AppRoot
+import com.mkulikov.taskb.feature.hello.api.HelloRoute
+import com.mkulikov.taskb.feature.home.api.HomeRoute
 import kotlinx.coroutines.CancellationException
 
 @Composable
 internal fun TaskBApp(settings: AppSettings) {
-    var navigation by remember(settings) { mutableStateOf<AppNavigation?>(null) }
-    var initialError by remember(settings) { mutableStateOf<String?>(null) }
+    var startDestination by remember(settings) { mutableStateOf<NavKey?>(null) }
 
     LaunchedEffect(settings) {
+        var initialError: String? = null
         val hasCompletedWelcome = try {
             settings.hasCompletedWelcome()
         } catch (exception: CancellationException) {
@@ -34,28 +33,17 @@ internal fun TaskBApp(settings: AppSettings) {
             initialError = "Не удалось прочитать настройки. Нажмите «Продолжить», чтобы начать работу."
             false
         }
-        navigation = AppNavigation(hasCompletedWelcome)
+        startDestination = if (hasCompletedWelcome) HomeRoute else HelloRoute(initialError)
     }
 
     Surface(modifier = Modifier.fillMaxSize()) {
-        val currentNavigation = navigation
-        if (currentNavigation == null) {
+        val destination = startDestination
+        if (destination == null) {
             Box(Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
                 CircularProgressIndicator()
             }
         } else {
-            NavDisplay(
-                backStack = currentNavigation.backStack,
-                onBack = currentNavigation::back,
-                entryProvider = entryProvider<NavKey> {
-                    helloEntry(initialError = initialError) {
-                        settings.completeWelcome()
-                        currentNavigation.completeHello()
-                    }
-                    homeEntry()
-                    taskEntry()
-                }
-            )
+            AppRoot(startDestination = destination)
         }
     }
 }

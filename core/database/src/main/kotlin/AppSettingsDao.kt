@@ -1,4 +1,4 @@
-package com.mkulikov.taskb.storage
+package com.mkulikov.taskb.core.database
 
 import androidx.room3.Dao
 import androidx.room3.Query

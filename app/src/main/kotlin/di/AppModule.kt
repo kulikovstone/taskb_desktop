@@ -1,11 +1,20 @@
 package com.mkulikov.taskb.di
 
-import com.mkulikov.taskb.AppPaths
-import com.mkulikov.taskb.AppSettings
+import com.mkulikov.taskb.core.database.DatabasePaths
+import com.mkulikov.taskb.core.database.di.databaseModule
+import com.mkulikov.taskb.core.navigation.di.navigationModule
+import com.mkulikov.taskb.feature.hello.di.helloModule
+import com.mkulikov.taskb.feature.home.di.homeModule
+import com.mkulikov.taskb.feature.task.di.taskModule
 import org.koin.dsl.module
-import org.koin.dsl.onClose
 import java.nio.file.Path
 
-internal fun appModule(databaseFile: Path = AppPaths.databaseFile()) = module {
-    single { AppSettings(databaseFile) } onClose { settings -> settings?.close() }
+internal fun appModule(databaseFile: Path = DatabasePaths.databaseFile()) = module {
+    includes(
+        databaseModule(databaseFile),
+        navigationModule(),
+        helloModule(),
+        homeModule(),
+        taskModule(),
+    )
 }

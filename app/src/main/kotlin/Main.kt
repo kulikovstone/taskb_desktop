@@ -8,6 +8,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Window
 import androidx.compose.ui.window.application
 import androidx.compose.ui.window.rememberWindowState
+import com.mkulikov.taskb.core.database.AppSettings
 import com.mkulikov.taskb.di.appModule
 import org.jetbrains.skia.Image
 import org.koin.compose.koinInject

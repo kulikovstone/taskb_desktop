@@ -7,10 +7,14 @@ import androidx.compose.ui.test.hasText
 import androidx.compose.ui.test.onNodeWithText
 import androidx.compose.ui.test.performClick
 import androidx.compose.ui.test.v2.runComposeUiTest
+import com.mkulikov.taskb.core.database.AppSettings
 import kotlinx.coroutines.runBlocking
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.io.TempDir
+import org.koin.compose.KoinIsolatedContext
+import java.nio.file.Files
 import java.nio.file.Path
+import kotlin.test.assertEquals
 import kotlin.test.assertTrue
 
 @OptIn(ExperimentalTestApi::class)
@@ -19,22 +23,70 @@ class AppNavigationUiTest {
     lateinit var temporaryDirectory: Path
 
     @Test
-    fun `continue opens home and persists completed welcome`() = runComposeUiTest {
+    fun `continue opens home and persists completed welcome`() {
         val file = temporaryDirectory.resolve("taskb.db")
-        AppSettings(file).use { settings ->
-            setContent { MaterialTheme { TaskBApp(settings) } }
-            waitUntil(timeoutMillis = 10_000) {
-                onAllNodes(hasText("Продолжить")).fetchSemanticsNodes().isNotEmpty()
+        withAppKoin(file) { application ->
+            val settings = application.koin.get<AppSettings>()
+            runComposeUiTest {
+                setContent {
+                    KoinIsolatedContext(application) { MaterialTheme { TaskBApp(settings) } }
+                }
+                waitUntil(timeoutMillis = 10_000) {
+                    onAllNodes(hasText("Продолжить")).fetchSemanticsNodes().isNotEmpty()
+                }
+                onNodeWithText("Добро пожаловать в TaskB").assertIsDisplayed()
+                onNodeWithText("Продолжить").performClick()
+                waitUntil(timeoutMillis = 10_000) {
+                    onAllNodes(hasText("Главный экран")).fetchSemanticsNodes().isNotEmpty()
+                }
+                onNodeWithText("Главный экран").assertIsDisplayed()
             }
-            onNodeWithText("Добро пожаловать в TaskB").assertIsDisplayed()
-            onNodeWithText("Продолжить").performClick()
-            waitUntil(timeoutMillis = 10_000) {
-                onAllNodes(hasText("Главный экран")).fetchSemanticsNodes().isNotEmpty()
+        }
+        withAppKoin(file) { application ->
+            assertTrue(runBlocking { application.koin.get<AppSettings>().hasCompletedWelcome() })
+        }
+    }
+
+    @Test
+    fun `returning user starts with home`() {
+        withAppKoin(temporaryDirectory.resolve("taskb.db")) { application ->
+            val settings = application.koin.get<AppSettings>()
+            runBlocking { settings.completeWelcome() }
+            runComposeUiTest {
+                setContent {
+                    KoinIsolatedContext(application) { MaterialTheme { TaskBApp(settings) } }
+                }
+                waitUntil(timeoutMillis = 10_000) {
+                    onAllNodes(hasText("Главный экран")).fetchSemanticsNodes().isNotEmpty()
+                }
+                onNodeWithText("Главный экран").assertIsDisplayed()
+                onNodeWithText("Добро пожаловать в TaskB").assertDoesNotExist()
             }
-            onNodeWithText("Главный экран").assertIsDisplayed()
         }
-        AppSettings(file).use { settings ->
-            assertTrue(runBlocking { settings.hasCompletedWelcome() })
+    }
+
+    @Test
+    fun `database error stays on hello and preserves existing file`() {
+        val blocked = Files.writeString(temporaryDirectory.resolve("config"), "existing")
+        withAppKoin(blocked.resolve("taskb.db")) { application ->
+            val settings = application.koin.get<AppSettings>()
+            runComposeUiTest {
+                setContent {
+                    KoinIsolatedContext(application) { MaterialTheme { TaskBApp(settings) } }
+                }
+                waitUntil(timeoutMillis = 10_000) {
+                    onAllNodes(hasText("Не удалось прочитать настройки. Нажмите «Продолжить», чтобы начать работу."))
+                        .fetchSemanticsNodes().isNotEmpty()
+                }
+                onNodeWithText("Продолжить").performClick()
+                waitUntil(timeoutMillis = 10_000) {
+                    onAllNodes(hasText("Не удалось сохранить настройки. Попробуйте ещё раз."))
+                        .fetchSemanticsNodes().isNotEmpty()
+                }
+                onNodeWithText("Добро пожаловать в TaskB").assertIsDisplayed()
+                onNodeWithText("Главный экран").assertDoesNotExist()
+            }
         }
+        assertEquals("existing", Files.readString(blocked))
     }
 }

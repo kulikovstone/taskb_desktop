@@ -1,4 +1,4 @@
-package com.mkulikov.taskb
+package com.mkulikov.taskb.core.database
 
 import androidx.room3.useReaderConnection
 import androidx.room3.useWriterConnection
@@ -6,8 +6,6 @@ import androidx.room3.withWriteTransaction
 import androidx.sqlite.SQLiteException
 import androidx.sqlite.driver.bundled.BundledSQLiteDriver
 import androidx.sqlite.execSQL
-import com.mkulikov.taskb.storage.AppDatabase
-import com.mkulikov.taskb.storage.ApplicationSetting
 import kotlinx.coroutines.runBlocking
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.io.TempDir

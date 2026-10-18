@@ -1,4 +1,4 @@
-package com.mkulikov.taskb.storage
+package com.mkulikov.taskb.core.database
 
 import androidx.room3.Entity
 import androidx.room3.PrimaryKey

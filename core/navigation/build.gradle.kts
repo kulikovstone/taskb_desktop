@@ -1,0 +1,27 @@
+plugins {
+    alias(libs.plugins.kotlin.jvm)
+    `java-library`
+    alias(libs.plugins.compose.compiler)
+}
+
+base {
+    archivesName.set("core-navigation")
+}
+
+kotlin {
+    jvmToolchain(21)
+}
+
+dependencies {
+    api(libs.navigation3.runtime)
+    api(libs.koin.core)
+    api(libs.compose.ui)
+    implementation(libs.compose.runtime)
+    implementation(libs.navigation3.ui)
+    implementation(libs.koin.compose)
+    testImplementation(libs.kotlin.test)
+}
+
+tasks.test {
+    useJUnitPlatform()
+}

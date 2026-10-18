@@ -12,8 +12,9 @@ kotlin {
 }
 
 dependencies {
+    implementation(project(":core:navigation"))
     implementation(project(":feature:home:api"))
-    implementation(libs.navigation3.runtime)
+    implementation(libs.koin.core)
     implementation(libs.compose.runtime)
     implementation(libs.compose.ui)
     implementation(libs.compose.foundation)

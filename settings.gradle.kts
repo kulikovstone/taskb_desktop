@@ -20,6 +20,8 @@ dependencyResolutionManagement {
 
 include(
     ":app",
+    ":core:database",
+    ":core:navigation",
     ":feature:hello",
     ":feature:hello:api",
     ":feature:home",

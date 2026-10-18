@@ -2,37 +2,28 @@ plugins {
     alias(libs.plugins.kotlin.jvm)
     alias(libs.plugins.compose.multiplatform)
     alias(libs.plugins.compose.compiler)
-    alias(libs.plugins.ksp)
-    alias(libs.plugins.room)
 }
 
 dependencies {
-    implementation(project(":feature:hello"))
+    implementation(project(":core:database"))
+    implementation(project(":core:navigation"))
     implementation(project(":feature:hello:api"))
-    implementation(project(":feature:home"))
     implementation(project(":feature:home:api"))
+    implementation(project(":feature:hello"))
+    implementation(project(":feature:home"))
     implementation(project(":feature:task"))
-    implementation(project(":feature:task:api"))
     implementation(compose.desktop.currentOs)
     implementation(libs.compose.material)
-    implementation(libs.navigation3.ui)
     implementation(libs.bundles.materialSymbols)
-    implementation(libs.room.runtime)
-    implementation(libs.sqlite.bundled)
     implementation(libs.kotlinx.coroutines.core)
     implementation(libs.koin.core)
     implementation(libs.koin.compose)
-    ksp(libs.room.compiler)
     testImplementation(libs.kotlin.test)
     testImplementation(libs.compose.ui.test)
 }
 
 kotlin {
     jvmToolchain(21)
-}
-
-room3 {
-    schemaDirectory("$projectDir/schemas")
 }
 
 tasks.test {
