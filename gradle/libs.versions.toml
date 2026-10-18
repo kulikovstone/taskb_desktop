@@ -1,6 +1,7 @@
 [versions]
 kotlin = "2.4.20"
 compose = "1.12.2"
+navigation3 = "1.1.1"
 materialSymbols = "2.2.1"
 sqliteJdbc = "3.53.4.0"
 exposed = "1.6.0"
@@ -8,6 +9,7 @@ slf4j = "2.0.17"
 
 [libraries]
 compose-material = { module = "org.jetbrains.compose.material:material", version.ref = "compose" }
+navigation3-ui = { module = "org.jetbrains.androidx.navigation3:navigation3-ui", version.ref = "navigation3" }
 
 materialSymbols-outlined = { module = "com.composables:icons-material-symbols-outlined-cmp", version.ref = "materialSymbols" }
 materialSymbols-rounded = { module = "com.composables:icons-material-symbols-rounded-cmp", version.ref = "materialSymbols" }

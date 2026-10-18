@@ -15,6 +15,7 @@ repositories {
 dependencies {
     implementation(compose.desktop.currentOs)
     implementation(libs.compose.material)
+    implementation(libs.navigation3.ui)
     implementation(libs.bundles.materialSymbols)
     implementation(libs.sqlite.jdbc)
     implementation(libs.bundles.exposed)
