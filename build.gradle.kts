@@ -37,6 +37,11 @@ compose.desktop {
             languageVersion.set(JavaLanguageVersion.of(21))
         }.get().metadata.installationPath.asFile.absolutePath
 
+        buildTypes.release.proguard {
+            isEnabled.set(true)
+            configurationFiles.from(project.file("compose-desktop.pro"))
+        }
+
         nativeDistributions {
             packageName = "TaskB"
             packageVersion = "0.1.0"
