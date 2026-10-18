@@ -15,6 +15,13 @@ repositories {
 dependencies {
     implementation(compose.desktop.currentOs)
     implementation("org.jetbrains.compose.material:material:1.12.2")
+    val materialSymbolsVersion = "2.2.1"
+    implementation("com.composables:icons-material-symbols-outlined-cmp:$materialSymbolsVersion")
+    implementation("com.composables:icons-material-symbols-rounded-cmp:$materialSymbolsVersion")
+    implementation("com.composables:icons-material-symbols-sharp-cmp:$materialSymbolsVersion")
+    implementation("com.composables:icons-material-symbols-outlined-filled-cmp:$materialSymbolsVersion")
+    implementation("com.composables:icons-material-symbols-rounded-filled-cmp:$materialSymbolsVersion")
+    implementation("com.composables:icons-material-symbols-sharp-filled-cmp:$materialSymbolsVersion")
     implementation("org.xerial:sqlite-jdbc:3.53.4.0")
     implementation("org.jetbrains.exposed:exposed-core:1.6.0")
     implementation("org.jetbrains.exposed:exposed-jdbc:1.6.0")
