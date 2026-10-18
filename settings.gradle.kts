@@ -26,6 +26,8 @@ include(
     ":feature:hello:api",
     ":feature:home",
     ":feature:home:api",
+    ":feature:settings",
+    ":feature:settings:api",
     ":feature:task",
     ":feature:task:api",
 )

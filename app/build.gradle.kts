@@ -11,6 +11,8 @@ dependencies {
     implementation(project(":feature:home:api"))
     implementation(project(":feature:hello"))
     implementation(project(":feature:home"))
+    implementation(project(":feature:settings"))
+    implementation(project(":feature:settings:api"))
     implementation(project(":feature:task"))
     implementation(compose.desktop.currentOs)
     implementation(libs.compose.material)

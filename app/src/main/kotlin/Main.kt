@@ -8,8 +8,8 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Window
 import androidx.compose.ui.window.application
 import androidx.compose.ui.window.rememberWindowState
-import com.mkulikov.taskb.core.database.AppSettings
 import com.mkulikov.taskb.di.appModule
+import com.mkulikov.taskb.feature.settings.api.IAppSettings
 import org.jetbrains.skia.Image
 import org.koin.compose.koinInject
 import org.koin.core.context.startKoin
@@ -22,7 +22,7 @@ fun main() {
 
     try {
         application(exitProcessOnExit = false) {
-            val settings = koinInject<AppSettings>()
+            val settings = koinInject<IAppSettings>()
             val appIcon = remember {
                 val iconBytes = checkNotNull(
                     Thread.currentThread().contextClassLoader.getResourceAsStream("icons/taskb.png")

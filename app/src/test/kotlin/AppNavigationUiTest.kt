@@ -7,15 +7,15 @@ import androidx.compose.ui.test.hasText
 import androidx.compose.ui.test.onNodeWithText
 import androidx.compose.ui.test.performClick
 import androidx.compose.ui.test.v2.runComposeUiTest
-import com.mkulikov.taskb.core.database.AppSettings
-import kotlinx.coroutines.runBlocking
-import org.junit.jupiter.api.Test
-import org.junit.jupiter.api.io.TempDir
-import org.koin.compose.KoinIsolatedContext
+import com.mkulikov.taskb.feature.settings.api.IAppSettings
 import java.nio.file.Files
 import java.nio.file.Path
 import kotlin.test.assertEquals
 import kotlin.test.assertTrue
+import kotlinx.coroutines.runBlocking
+import org.junit.jupiter.api.Test
+import org.junit.jupiter.api.io.TempDir
+import org.koin.compose.KoinIsolatedContext
 
 @OptIn(ExperimentalTestApi::class)
 class AppNavigationUiTest {
@@ -26,7 +26,7 @@ class AppNavigationUiTest {
     fun `continue opens home and persists completed welcome`() {
         val file = temporaryDirectory.resolve("taskb.db")
         withAppKoin(file) { application ->
-            val settings = application.koin.get<AppSettings>()
+            val settings = application.koin.get<IAppSettings>()
             runComposeUiTest {
                 setContent {
                     KoinIsolatedContext(application) { MaterialTheme { TaskBApp(settings) } }
@@ -43,14 +43,14 @@ class AppNavigationUiTest {
             }
         }
         withAppKoin(file) { application ->
-            assertTrue(runBlocking { application.koin.get<AppSettings>().hasCompletedWelcome() })
+            assertTrue(runBlocking { application.koin.get<IAppSettings>().hasCompletedWelcome() })
         }
     }
 
     @Test
     fun `returning user starts with home`() {
         withAppKoin(temporaryDirectory.resolve("taskb.db")) { application ->
-            val settings = application.koin.get<AppSettings>()
+            val settings = application.koin.get<IAppSettings>()
             runBlocking { settings.completeWelcome() }
             runComposeUiTest {
                 setContent {
@@ -69,7 +69,7 @@ class AppNavigationUiTest {
     fun `database error stays on hello and preserves existing file`() {
         val blocked = Files.writeString(temporaryDirectory.resolve("config"), "existing")
         withAppKoin(blocked.resolve("taskb.db")) { application ->
-            val settings = application.koin.get<AppSettings>()
+            val settings = application.koin.get<IAppSettings>()
             runComposeUiTest {
                 setContent {
                     KoinIsolatedContext(application) { MaterialTheme { TaskBApp(settings) } }

@@ -1,6 +1,7 @@
-package com.mkulikov.taskb.core.database
+package com.mkulikov.taskb.feature.settings
 
 import androidx.room3.useReaderConnection
+import com.mkulikov.taskb.core.database.AppDatabase
 import kotlinx.coroutines.runBlocking
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.io.TempDir

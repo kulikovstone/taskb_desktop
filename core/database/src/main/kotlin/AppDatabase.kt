@@ -6,12 +6,14 @@ import androidx.room3.RoomDatabase
 import androidx.sqlite.SQLiteConnection
 import androidx.sqlite.SQLiteDriver
 import androidx.sqlite.driver.bundled.BundledSQLiteDriver
+import com.mkulikov.taskb.feature.settings.api.database.AppSettingsDao
+import com.mkulikov.taskb.feature.settings.api.database.ApplicationSetting
 import kotlinx.coroutines.Dispatchers
 import java.nio.file.Files
 import java.nio.file.Path
 
 @Database(entities = [ApplicationSetting::class], version = 1)
-internal abstract class AppDatabase : RoomDatabase() {
+abstract class AppDatabase : RoomDatabase() {
     abstract fun settingsDao(): AppSettingsDao
 
     companion object {

@@ -6,6 +6,7 @@ import androidx.room3.withWriteTransaction
 import androidx.sqlite.SQLiteException
 import androidx.sqlite.driver.bundled.BundledSQLiteDriver
 import androidx.sqlite.execSQL
+import com.mkulikov.taskb.feature.settings.api.database.ApplicationSetting
 import kotlinx.coroutines.runBlocking
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.io.TempDir

@@ -17,6 +17,8 @@
             <option value="$PROJECT_DIR$/feature/hello/api" />
             <option value="$PROJECT_DIR$/feature/home" />
             <option value="$PROJECT_DIR$/feature/home/api" />
+            <option value="$PROJECT_DIR$/feature/settings" />
+            <option value="$PROJECT_DIR$/feature/settings/api" />
             <option value="$PROJECT_DIR$/feature/task" />
             <option value="$PROJECT_DIR$/feature/task/api" />
           </set>

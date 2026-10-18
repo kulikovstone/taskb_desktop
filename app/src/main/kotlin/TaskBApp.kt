@@ -13,14 +13,14 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.navigation3.runtime.NavKey
-import com.mkulikov.taskb.core.database.AppSettings
 import com.mkulikov.taskb.core.navigation.AppRoot
 import com.mkulikov.taskb.feature.hello.api.HelloRoute
 import com.mkulikov.taskb.feature.home.api.HomeRoute
+import com.mkulikov.taskb.feature.settings.api.IAppSettings
 import kotlinx.coroutines.CancellationException
 
 @Composable
-internal fun TaskBApp(settings: AppSettings) {
+internal fun TaskBApp(settings: IAppSettings) {
     var startDestination by remember(settings) { mutableStateOf<NavKey?>(null) }
 
     LaunchedEffect(settings) {
