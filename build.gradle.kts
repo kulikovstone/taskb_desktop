@@ -2,6 +2,8 @@ plugins {
     alias(libs.plugins.kotlin.jvm)
     alias(libs.plugins.compose.multiplatform)
     alias(libs.plugins.compose.compiler)
+    alias(libs.plugins.ksp)
+    alias(libs.plugins.room)
 }
 
 group = "com.mkulikov.taskb"
@@ -17,14 +19,19 @@ dependencies {
     implementation(libs.compose.material)
     implementation(libs.navigation3.ui)
     implementation(libs.bundles.materialSymbols)
-    implementation(libs.sqlite.jdbc)
-    implementation(libs.bundles.exposed)
-    runtimeOnly(libs.slf4j.simple)
+    implementation(libs.room.runtime)
+    implementation(libs.sqlite.bundled)
+    implementation(libs.kotlinx.coroutines.core)
+    ksp(libs.room.compiler)
     testImplementation(libs.kotlin.test)
 }
 
 kotlin {
     jvmToolchain(21)
+}
+
+room3 {
+    schemaDirectory("$projectDir/schemas")
 }
 
 tasks.test {
@@ -46,7 +53,6 @@ compose.desktop {
         nativeDistributions {
             packageName = "TaskB"
             packageVersion = "0.1.0"
-            modules("java.sql")
 
             windows {
                 iconFile.set(project.file("packaging/icons/taskb.ico"))

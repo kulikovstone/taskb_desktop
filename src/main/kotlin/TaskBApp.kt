@@ -26,12 +26,10 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import kotlinx.coroutines.CancellationException
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
 
 @Composable
-internal fun TaskBApp(settings: AppSettings = remember { AppSettings() }) {
+internal fun TaskBApp(settings: AppSettings) {
     var hasCompletedWelcome by remember { mutableStateOf(false) }
     var isLoading by remember { mutableStateOf(true) }
     var isContinuing by remember { mutableStateOf(false) }
@@ -40,7 +38,7 @@ internal fun TaskBApp(settings: AppSettings = remember { AppSettings() }) {
 
     LaunchedEffect(settings) {
         try {
-            hasCompletedWelcome = withContext(Dispatchers.IO) { settings.hasCompletedWelcome() }
+            hasCompletedWelcome = settings.hasCompletedWelcome()
         } catch (exception: CancellationException) {
             throw exception
         } catch (_: Exception) {
@@ -64,9 +62,7 @@ internal fun TaskBApp(settings: AppSettings = remember { AppSettings() }) {
                     error = null
                     scope.launch {
                         try {
-                            withContext(Dispatchers.IO) {
-                                settings.completeWelcome()
-                            }
+                            settings.completeWelcome()
                             hasCompletedWelcome = true
                         } catch (exception: CancellationException) {
                             throw exception

@@ -1,9 +1,8 @@
 package com.mkulikov.taskb
 
+import androidx.room3.useReaderConnection
 import com.mkulikov.taskb.storage.AppDatabase
-import com.mkulikov.taskb.storage.ApplicationSettingsTable
-import org.jetbrains.exposed.v1.jdbc.selectAll
-import org.jetbrains.exposed.v1.jdbc.transactions.transaction
+import kotlinx.coroutines.runBlocking
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.io.TempDir
 import java.io.IOException
@@ -22,31 +21,38 @@ class AppSettingsTest {
     private fun settings() = AppSettings(databaseFile)
 
     @Test
-    fun `first launch creates database and shows welcome`() {
+    fun `first launch creates database and shows welcome`() = runBlocking {
         assertFalse(Files.exists(databaseFile))
 
-        assertFalse(settings().hasCompletedWelcome())
+        settings().use { assertFalse(it.hasCompletedWelcome()) }
 
         assertTrue(Files.isRegularFile(databaseFile))
     }
 
     @Test
-    fun `completed welcome is remembered after restart`() {
-        settings().completeWelcome()
-        settings().completeWelcome()
+    fun `completed welcome is remembered after restart`() = runBlocking {
+        settings().use {
+            it.completeWelcome()
+            it.completeWelcome()
+        }
 
-        assertTrue(settings().hasCompletedWelcome())
-        transaction(AppDatabase(databaseFile).database) {
-            assertEquals(1L, ApplicationSettingsTable.selectAll().count())
+        settings().use { assertTrue(it.hasCompletedWelcome()) }
+        AppDatabase.open(databaseFile).useDatabase { database ->
+            database.useReaderConnection { connection ->
+                connection.usePrepared("SELECT COUNT(*) FROM application_settings") {
+                    assertTrue(it.step())
+                    assertEquals(1L, it.getLong(0))
+                }
+            }
         }
     }
 
     @Test
-    fun `settings write failure is reported without changing existing file`() {
+    fun `settings write failure is reported without changing existing file`() = runBlocking {
         val blockedConfig = Files.writeString(temporaryDirectory.resolve("config"), "existing")
 
-        assertFailsWith<IOException> {
-            AppSettings(blockedConfig.resolve("taskb.db")).completeWelcome()
+        AppSettings(blockedConfig.resolve("taskb.db")).use { settings ->
+            assertFailsWith<IOException> { settings.completeWelcome() }
         }
 
         assertEquals("existing", Files.readString(blockedConfig))

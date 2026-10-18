@@ -1,10 +1,5 @@
-# Xerial loads its driver via JDBC and calls SQLite classes through JNI.
--keep class org.sqlite.** { *; }
+# Room instantiates generated database implementations through reflection.
+-keep class * extends androidx.room3.RoomDatabase { <init>(); }
 
-# These implementations are instantiated through META-INF/services.
--keep class org.jetbrains.exposed.v1.jdbc.ExposedConnectionImpl {
-    public <init>();
-}
--keep class org.slf4j.simple.SimpleServiceProvider {
-    public <init>();
-}
+# SQLite's JNI library registers native methods, including unused ones.
+-keep class androidx.sqlite.driver.bundled.** { *; }
