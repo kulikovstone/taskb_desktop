@@ -1,4 +1,4 @@
-package com.mkulikov.taskb.feature.hello.mvi
+package com.mkulikov.taskb.feature.hello.screen.hello
 
 import com.mkulikov.taskb.core.mvi.CoroutineStore
 import com.mkulikov.taskb.feature.settings.api.IAppSettings

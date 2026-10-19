@@ -1,4 +1,4 @@
-package com.mkulikov.taskb.feature.group.mvi
+package com.mkulikov.taskb.feature.group.screen.group_editor
 
 import com.mkulikov.taskb.feature.group.model.Group
 import com.mkulikov.taskb.feature.group.model.GroupColor

@@ -1,4 +1,4 @@
-package com.mkulikov.taskb.feature.hello
+package com.mkulikov.taskb.feature.hello.screen.hello
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -18,8 +18,6 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
-import com.mkulikov.taskb.feature.hello.mvi.HelloIntent
-import com.mkulikov.taskb.feature.hello.mvi.HelloState
 
 @Composable
 internal fun HelloScreen(state: HelloState, onIntent: (HelloIntent) -> Unit) {

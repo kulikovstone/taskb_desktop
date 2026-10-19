@@ -1,4 +1,4 @@
-package com.mkulikov.taskb.feature.task
+package com.mkulikov.taskb.feature.task.screen.task
 
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize

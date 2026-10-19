@@ -1,4 +1,4 @@
-package com.mkulikov.taskb.feature.group.screen
+package com.mkulikov.taskb.feature.group.screen.group_editor
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -32,10 +32,8 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardCapitalization
 import androidx.compose.ui.unit.dp
+import com.mkulikov.taskb.feature.group.component.GroupLoadError
 import com.mkulikov.taskb.feature.group.model.GroupColor
-import com.mkulikov.taskb.feature.group.mvi.GroupEditorDialog
-import com.mkulikov.taskb.feature.group.mvi.GroupEditorIntent
-import com.mkulikov.taskb.feature.group.mvi.GroupEditorState
 import com.mkulikov.taskb.ui.button.TaskBActionButton
 import com.mkulikov.taskb.ui.component.ColorSelector
 import com.mkulikov.taskb.ui.component.TaskBTopAppBar

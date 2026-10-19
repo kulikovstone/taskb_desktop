@@ -11,11 +11,11 @@ import com.mkulikov.taskb.core.navigation.IAppNavigator
 import com.mkulikov.taskb.core.navigation.INavEntry
 import com.mkulikov.taskb.core.navigation.rememberNavEntryResource
 import com.mkulikov.taskb.feature.group.api.GroupRoute
-import com.mkulikov.taskb.feature.group.mvi.GroupEditorArgs
-import com.mkulikov.taskb.feature.group.mvi.GroupEditorStore
-import com.mkulikov.taskb.feature.group.mvi.GroupListStore
-import com.mkulikov.taskb.feature.group.screen.GroupEditorScreen
-import com.mkulikov.taskb.feature.group.screen.GroupListScreen
+import com.mkulikov.taskb.feature.group.screen.group_editor.GroupEditorArgs
+import com.mkulikov.taskb.feature.group.screen.group_editor.GroupEditorStore
+import com.mkulikov.taskb.feature.group.screen.group_list.GroupListStore
+import com.mkulikov.taskb.feature.group.screen.group_editor.GroupEditorScreen
+import com.mkulikov.taskb.feature.group.screen.group_list.GroupListScreen
 import org.koin.compose.getKoin
 import org.koin.core.parameter.parametersOf
 import kotlinx.coroutines.CoroutineDispatcher

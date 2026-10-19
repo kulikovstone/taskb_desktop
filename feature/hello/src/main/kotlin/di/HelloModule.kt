@@ -2,7 +2,7 @@ package com.mkulikov.taskb.feature.hello.di
 
 import com.mkulikov.taskb.core.navigation.INavEntry
 import com.mkulikov.taskb.feature.hello.api.HelloRoute
-import com.mkulikov.taskb.feature.hello.mvi.HelloStore
+import com.mkulikov.taskb.feature.hello.screen.hello.HelloStore
 import com.mkulikov.taskb.feature.hello.navigation.HelloNavEntry
 import org.koin.core.qualifier.named
 import org.koin.dsl.module

@@ -1,8 +1,8 @@
-package com.mkulikov.taskb.feature.group.mvi
+package com.mkulikov.taskb.feature.group.screen.group_editor
 
 import com.mkulikov.taskb.feature.group.model.Group
 import com.mkulikov.taskb.feature.group.model.GroupColor
-import com.mkulikov.taskb.feature.group.repository.GroupRepository
+import com.mkulikov.taskb.feature.group.testing.FakeGroupRepository
 import com.mkulikov.taskb.feature.group.repository.GroupWriteResult
 import kotlin.test.assertEquals
 import kotlin.test.assertFalse
@@ -12,9 +12,6 @@ import kotlin.test.assertTrue
 import kotlinx.coroutines.CompletableDeferred
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.awaitCancellation
-import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.emitAll
-import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.test.StandardTestDispatcher
 import kotlinx.coroutines.test.advanceUntilIdle
 import kotlinx.coroutines.test.runCurrent
@@ -22,10 +19,10 @@ import kotlinx.coroutines.test.runTest
 import org.junit.jupiter.api.Test
 
 @OptIn(ExperimentalCoroutinesApi::class)
-class GroupStoreTest {
+class GroupEditorStoreTest {
     @Test
     fun `blank names are rejected and repeated saves produce one normalized write`() = runTest {
-        val repository = FakeRepository()
+        val repository = FakeGroupRepository()
         val gate = CompletableDeferred<Unit>()
         repository.onWrite = { gate.await() }
         GroupEditorStore(repository, initialColor = GroupColor.Blue, dispatcher = StandardTestDispatcher(testScheduler)).use { store ->
@@ -56,7 +53,7 @@ class GroupStoreTest {
 
     @Test
     fun `name conflicts and storage failures keep the draft and allow retry`() = runTest {
-        val repository = FakeRepository()
+        val repository = FakeGroupRepository()
         repository.result = GroupWriteResult.NameConflict
         GroupEditorStore(repository, dispatcher = StandardTestDispatcher(testScheduler)).use { store ->
             store.accept(GroupEditorIntent.NameChanged("Work"))
@@ -82,7 +79,7 @@ class GroupStoreTest {
 
     @Test
     fun `editing ignores surrounding whitespace and saves color changes with the original id`() = runTest {
-        val repository = FakeRepository()
+        val repository = FakeGroupRepository()
         GroupEditorStore(repository, groupId = 7, dispatcher = StandardTestDispatcher(testScheduler)).use { store ->
             advanceUntilIdle()
             assertEquals("Work", store.state.value.name)
@@ -102,7 +99,7 @@ class GroupStoreTest {
 
     @Test
     fun `delete requires confirmation and cancelling preserves the group`() = runTest {
-        val repository = FakeRepository()
+        val repository = FakeGroupRepository()
         GroupEditorStore(repository, groupId = 7, dispatcher = StandardTestDispatcher(testScheduler)).use { store ->
             advanceUntilIdle()
             store.accept(GroupEditorIntent.ConfirmDelete)
@@ -125,7 +122,7 @@ class GroupStoreTest {
 
     @Test
     fun `load failures and missing groups do not leave a permanent spinner`() = runTest {
-        val repository = FakeRepository()
+        val repository = FakeGroupRepository()
         repository.failRead = true
         GroupEditorStore(repository, groupId = 7, dispatcher = StandardTestDispatcher(testScheduler)).use { store ->
             advanceUntilIdle()
@@ -149,7 +146,7 @@ class GroupStoreTest {
 
     @Test
     fun `closing an editor cancels its operation`() = runTest {
-        val repository = FakeRepository()
+        val repository = FakeGroupRepository()
         var cancelled = false
         repository.onWrite = { try { awaitCancellation() } finally { cancelled = true } }
         val store = GroupEditorStore(repository, dispatcher = StandardTestDispatcher(testScheduler))
@@ -163,57 +160,5 @@ class GroupStoreTest {
             assertTrue(cancelled)
             assertFalse(store.state.value.isFinished)
         } finally { store.close() }
-    }
-
-    @Test
-    fun `list observes repository updates retries failures and releases its subscription`() = runTest {
-        val repository = FakeRepository()
-        repository.failRead = true
-        val store = GroupListStore(repository, StandardTestDispatcher(testScheduler))
-        try {
-            advanceUntilIdle()
-            assertFalse(store.state.value.isLoading)
-            assertNotNull(store.state.value.error)
-            repository.failRead = false
-            store.accept(GroupListIntent.Retry)
-            advanceUntilIdle()
-            assertNull(store.state.value.error)
-            assertEquals(1, repository.subscriptions)
-            repository.values.value = listOf(Group(1, "Personal", GroupColor.Pink))
-            advanceUntilIdle()
-            assertEquals("Personal", store.state.value.groups.single().name)
-            store.close()
-            runCurrent()
-            assertEquals(0, repository.subscriptions)
-        } finally { store.close() }
-    }
-
-    private class FakeRepository : GroupRepository {
-        val values = MutableStateFlow(emptyList<Group>())
-        var group: Group? = Group(7, "Work", GroupColor.Blue)
-        var failRead = false
-        var result = GroupWriteResult.Saved
-        var writes = 0
-        var deletions = 0
-        var lastWrite: Group? = null
-        var subscriptions = 0
-        var onWrite: suspend () -> Unit = {}
-        override val groups = flow {
-            if (failRead) error("Storage unavailable")
-            subscriptions++
-            try { emitAll(values) } finally { subscriptions-- }
-        }
-        override suspend fun getById(id: Int): Group? {
-            if (failRead) error("Storage unavailable")
-            return group
-        }
-        override suspend fun add(name: String, color: GroupColor): GroupWriteResult = update(Group(0, name, color))
-        override suspend fun update(group: Group): GroupWriteResult {
-            writes++
-            onWrite()
-            lastWrite = group
-            return result
-        }
-        override suspend fun delete(id: Int) { deletions++ }
     }
 }

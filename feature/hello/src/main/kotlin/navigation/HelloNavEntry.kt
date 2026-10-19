@@ -8,9 +8,9 @@ import androidx.navigation3.runtime.NavKey
 import com.mkulikov.taskb.core.navigation.IAppNavigator
 import com.mkulikov.taskb.core.navigation.INavEntry
 import com.mkulikov.taskb.core.navigation.rememberNavEntryResource
-import com.mkulikov.taskb.feature.hello.HelloScreen
+import com.mkulikov.taskb.feature.hello.screen.hello.HelloScreen
 import com.mkulikov.taskb.feature.hello.api.HelloRoute
-import com.mkulikov.taskb.feature.hello.mvi.HelloStore
+import com.mkulikov.taskb.feature.hello.screen.hello.HelloStore
 import com.mkulikov.taskb.feature.home.api.HomeRoute
 import org.koin.compose.getKoin
 import org.koin.core.parameter.parametersOf

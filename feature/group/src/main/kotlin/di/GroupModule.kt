@@ -2,9 +2,9 @@ package com.mkulikov.taskb.feature.group.di
 
 import com.mkulikov.taskb.core.navigation.INavEntry
 import com.mkulikov.taskb.core.database.AppDatabase
-import com.mkulikov.taskb.feature.group.mvi.GroupEditorArgs
-import com.mkulikov.taskb.feature.group.mvi.GroupEditorStore
-import com.mkulikov.taskb.feature.group.mvi.GroupListStore
+import com.mkulikov.taskb.feature.group.screen.group_editor.GroupEditorArgs
+import com.mkulikov.taskb.feature.group.screen.group_editor.GroupEditorStore
+import com.mkulikov.taskb.feature.group.screen.group_list.GroupListStore
 import com.mkulikov.taskb.feature.group.navigation.GroupNavEntry
 import com.mkulikov.taskb.feature.group.repository.GroupRepository
 import com.mkulikov.taskb.feature.group.repository.RoomGroupRepository

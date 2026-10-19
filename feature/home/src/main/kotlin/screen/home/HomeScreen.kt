@@ -1,4 +1,4 @@
-package com.mkulikov.taskb.feature.home
+package com.mkulikov.taskb.feature.home.screen.home
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box

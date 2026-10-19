@@ -5,7 +5,7 @@ import androidx.navigation3.runtime.NavKey
 import com.mkulikov.taskb.core.navigation.IAppNavigator
 import com.mkulikov.taskb.core.navigation.INavEntry
 import com.mkulikov.taskb.feature.group.api.GroupRoute
-import com.mkulikov.taskb.feature.home.HomeScreen
+import com.mkulikov.taskb.feature.home.screen.home.HomeScreen
 import com.mkulikov.taskb.feature.home.api.HomeRoute
 import com.mkulikov.taskb.feature.task.api.TaskRoute
 
