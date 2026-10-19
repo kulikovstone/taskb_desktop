@@ -9,6 +9,6 @@ import com.mkulikov.taskb.feature.task.api.TaskRoute
 
 internal class TaskNavEntry : INavEntry {
     override fun register(scope: EntryProviderScope<NavKey>, navigator: IAppNavigator) {
-        scope.entry<TaskRoute> { TaskScreen() }
+        scope.entry<TaskRoute> { TaskScreen(onBack = navigator::back) }
     }
 }

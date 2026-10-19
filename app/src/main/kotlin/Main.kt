@@ -1,6 +1,5 @@
 package com.mkulikov.taskb
 
-import androidx.compose.material.MaterialTheme
 import androidx.compose.runtime.remember
 import androidx.compose.ui.graphics.painter.BitmapPainter
 import androidx.compose.ui.graphics.toComposeImageBitmap
@@ -10,6 +9,7 @@ import androidx.compose.ui.window.application
 import androidx.compose.ui.window.rememberWindowState
 import com.mkulikov.taskb.di.appModule
 import com.mkulikov.taskb.feature.settings.api.IAppSettings
+import com.mkulikov.taskb.ui.theme.TaskBTheme
 import org.jetbrains.skia.Image
 import org.koin.compose.koinInject
 import org.koin.core.context.startKoin
@@ -36,7 +36,7 @@ fun main() {
                 icon = appIcon,
                 state = rememberWindowState(width = 960.dp, height = 640.dp)
             ) {
-                MaterialTheme {
+                TaskBTheme {
                     TaskBApp(settings)
                 }
             }

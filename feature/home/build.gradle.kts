@@ -14,7 +14,9 @@ kotlin {
 dependencies {
     implementation(project(":ui"))
     implementation(project(":core:navigation"))
+    implementation(project(":feature:group:api"))
     implementation(project(":feature:home:api"))
+    implementation(project(":feature:task:api"))
     implementation(libs.koin.core)
     implementation(libs.compose.runtime)
     implementation(libs.compose.ui)

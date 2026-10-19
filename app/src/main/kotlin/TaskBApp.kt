@@ -3,6 +3,7 @@ package com.mkulikov.taskb
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material.CircularProgressIndicator
+import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Surface
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -36,7 +37,7 @@ internal fun TaskBApp(settings: IAppSettings) {
         startDestination = if (hasCompletedWelcome) HomeRoute else HelloRoute(initialError)
     }
 
-    Surface(modifier = Modifier.fillMaxSize()) {
+    Surface(modifier = Modifier.fillMaxSize(), color = MaterialTheme.colors.background) {
         val destination = startDestination
         if (destination == null) {
             Box(Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {

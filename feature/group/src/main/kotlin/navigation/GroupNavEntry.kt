@@ -9,6 +9,6 @@ import com.mkulikov.taskb.feature.group.api.GroupRoute
 
 internal class GroupNavEntry : INavEntry {
     override fun register(scope: EntryProviderScope<NavKey>, navigator: IAppNavigator) {
-        scope.entry<GroupRoute> { GroupScreen() }
+        scope.entry<GroupRoute> { GroupScreen(onBack = navigator::back) }
     }
 }
