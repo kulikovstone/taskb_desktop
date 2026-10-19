@@ -5,6 +5,7 @@ import androidx.compose.ui.test.assertIsDisplayed
 import androidx.compose.ui.test.hasClickAction
 import androidx.compose.ui.test.hasText
 import androidx.compose.ui.test.onNodeWithText
+import androidx.compose.ui.test.onNodeWithContentDescription
 import androidx.compose.ui.test.onRoot
 import androidx.compose.ui.test.performClick
 import androidx.compose.ui.test.v2.runComposeUiTest
@@ -82,10 +83,10 @@ class AppNavigationUiTest {
                 onNodeWithText("Version ${AppVersion.value}").assertIsDisplayed()
 
                 onNode(hasText("Groups") and hasClickAction()).performClick()
-                onNodeWithText("Назад").assertIsDisplayed()
-                onNodeWithText("Группы").assertIsDisplayed()
+                onNodeWithContentDescription("Back").assertIsDisplayed()
+                onNodeWithText("Groups").assertIsDisplayed()
                 onNode(hasText("Tasks") and hasClickAction()).assertDoesNotExist()
-                onNodeWithText("Назад").performClick()
+                onNodeWithContentDescription("Back").performClick()
                 onNode(hasText("Tasks") and hasClickAction()).assertIsDisplayed()
                 onNode(hasText("Groups") and hasClickAction()).assertIsDisplayed()
                 onNodeWithText("Version ${AppVersion.value}").assertIsDisplayed()

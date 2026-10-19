@@ -15,4 +15,6 @@ kotlin {
 
 dependencies {
     api(libs.navigation3.runtime)
+    api(libs.kotlinx.coroutines.core)
+    implementation(libs.room.runtime)
 }

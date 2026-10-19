@@ -25,6 +25,7 @@ dependencies {
     implementation(libs.koin.core)
     implementation(libs.koin.compose)
     testImplementation(libs.kotlin.test)
+    testImplementation(project(":feature:group:api"))
     testImplementation(libs.compose.ui.test)
     testImplementation(libs.navigation3.ui)
 }

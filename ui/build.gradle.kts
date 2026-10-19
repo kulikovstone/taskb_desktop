@@ -13,6 +13,7 @@ kotlin {
 }
 
 dependencies {
+    implementation(libs.materialSymbols.outlined)
     api(libs.compose.runtime)
     api(libs.compose.ui)
     api(libs.compose.foundation)

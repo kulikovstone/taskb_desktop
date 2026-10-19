@@ -13,6 +13,7 @@ import org.junit.jupiter.api.io.TempDir
 import java.nio.file.Path
 import kotlin.test.assertEquals
 import kotlin.test.assertFailsWith
+import kotlin.test.assertNull
 import kotlin.test.assertTrue
 
 class AppDatabaseTest {
@@ -28,7 +29,7 @@ class AppDatabaseTest {
 
         AppDatabase.open(file).useDatabase { database ->
             assertEquals("saved", database.settingsDao().getValue("example"))
-            assertEquals(1L, database.queryLong("PRAGMA user_version"))
+            assertEquals(2L, database.queryLong("PRAGMA user_version"))
         }
     }
 
@@ -79,7 +80,7 @@ class AppDatabaseTest {
         driver.open(file.toString()).use { connection ->
             connection.execSQL("CREATE TABLE future_data (value TEXT NOT NULL)")
             connection.execSQL("INSERT INTO future_data VALUES ('preserved')")
-            connection.execSQL("PRAGMA user_version = 2")
+            connection.execSQL("PRAGMA user_version = 3")
         }
 
         AppDatabase.open(file).useDatabase { database ->
@@ -95,8 +96,23 @@ class AppDatabaseTest {
             }
             connection.prepare("PRAGMA user_version").use {
                 assertTrue(it.step())
-                assertEquals(2L, it.getLong(0))
+                assertEquals(3L, it.getLong(0))
             }
+        }
+    }
+
+    @Test
+    fun `version one database is recreated without a data migration`() = runBlocking {
+        val file = temporaryDirectory.resolve("old.db")
+        BundledSQLiteDriver().open(file.toString()).use { connection ->
+            connection.execSQL("CREATE TABLE application_settings (`key` TEXT NOT NULL PRIMARY KEY, value TEXT NOT NULL)")
+            connection.execSQL("INSERT INTO application_settings VALUES ('welcomeCompleted', 'true')")
+            connection.execSQL("PRAGMA user_version = 1")
+        }
+        AppDatabase.open(file).useDatabase { database ->
+            assertNull(database.settingsDao().getValue("welcomeCompleted"))
+            assertEquals(2L, database.queryLong("PRAGMA user_version"))
+            assertEquals(0L, database.queryLong("SELECT COUNT(*) FROM `groups`"))
         }
     }
 
