@@ -39,10 +39,10 @@ class AppNavigationUiTest {
                 onNodeWithText("Добро пожаловать в TaskB").assertIsDisplayed()
                 onNodeWithText("Продолжить").performClick()
                 waitUntil(timeoutMillis = 10_000) {
-                    onAllNodes(hasText("Задачи") and hasClickAction()).fetchSemanticsNodes().isNotEmpty()
+                    onAllNodes(hasText("Tasks") and hasClickAction()).fetchSemanticsNodes().isNotEmpty()
                 }
-                onNode(hasText("Задачи") and hasClickAction()).assertIsDisplayed()
-                onNode(hasText("Группы") and hasClickAction()).assertIsDisplayed()
+                onNode(hasText("Tasks") and hasClickAction()).assertIsDisplayed()
+                onNode(hasText("Groups") and hasClickAction()).assertIsDisplayed()
                 onNodeWithText("Главный экран").assertDoesNotExist()
             }
         }
@@ -61,34 +61,34 @@ class AppNavigationUiTest {
                     KoinIsolatedContext(application) { TaskBTheme(darkTheme = true) { TaskBApp(settings) } }
                 }
                 waitUntil(timeoutMillis = 10_000) {
-                    onAllNodes(hasText("Задачи") and hasClickAction()).fetchSemanticsNodes().isNotEmpty()
+                    onAllNodes(hasText("Tasks") and hasClickAction()).fetchSemanticsNodes().isNotEmpty()
                 }
-                onNode(hasText("Задачи") and hasClickAction()).assertIsDisplayed()
-                onNode(hasText("Группы") and hasClickAction()).assertIsDisplayed()
+                onNode(hasText("Tasks") and hasClickAction()).assertIsDisplayed()
+                onNode(hasText("Groups") and hasClickAction()).assertIsDisplayed()
                 onNodeWithText("Главный экран").assertDoesNotExist()
                 onNodeWithText("Добро пожаловать в TaskB").assertDoesNotExist()
-                val version = onNodeWithText("Версия ${AppVersion.value}").assertIsDisplayed()
+                val version = onNodeWithText("Version ${AppVersion.value}").assertIsDisplayed()
                 val screenBounds = onRoot().fetchSemanticsNode().boundsInRoot
                 val versionBounds = version.fetchSemanticsNode().boundsInRoot
                 assertTrue(versionBounds.center.y > screenBounds.top + screenBounds.height * 0.8f)
 
-                onNode(hasText("Задачи") and hasClickAction()).performClick()
+                onNode(hasText("Tasks") and hasClickAction()).performClick()
                 onNodeWithText("Назад").assertIsDisplayed()
                 onNodeWithText("Задачи").assertIsDisplayed()
-                onNode(hasText("Группы") and hasClickAction()).assertDoesNotExist()
+                onNode(hasText("Groups") and hasClickAction()).assertDoesNotExist()
                 onNodeWithText("Назад").performClick()
-                onNode(hasText("Задачи") and hasClickAction()).assertIsDisplayed()
-                onNode(hasText("Группы") and hasClickAction()).assertIsDisplayed()
-                onNodeWithText("Версия ${AppVersion.value}").assertIsDisplayed()
+                onNode(hasText("Tasks") and hasClickAction()).assertIsDisplayed()
+                onNode(hasText("Groups") and hasClickAction()).assertIsDisplayed()
+                onNodeWithText("Version ${AppVersion.value}").assertIsDisplayed()
 
-                onNode(hasText("Группы") and hasClickAction()).performClick()
+                onNode(hasText("Groups") and hasClickAction()).performClick()
                 onNodeWithText("Назад").assertIsDisplayed()
                 onNodeWithText("Группы").assertIsDisplayed()
-                onNode(hasText("Задачи") and hasClickAction()).assertDoesNotExist()
+                onNode(hasText("Tasks") and hasClickAction()).assertDoesNotExist()
                 onNodeWithText("Назад").performClick()
-                onNode(hasText("Задачи") and hasClickAction()).assertIsDisplayed()
-                onNode(hasText("Группы") and hasClickAction()).assertIsDisplayed()
-                onNodeWithText("Версия ${AppVersion.value}").assertIsDisplayed()
+                onNode(hasText("Tasks") and hasClickAction()).assertIsDisplayed()
+                onNode(hasText("Groups") and hasClickAction()).assertIsDisplayed()
+                onNodeWithText("Version ${AppVersion.value}").assertIsDisplayed()
             }
         }
     }
@@ -112,8 +112,8 @@ class AppNavigationUiTest {
                         .fetchSemanticsNodes().isNotEmpty()
                 }
                 onNodeWithText("Добро пожаловать в TaskB").assertIsDisplayed()
-                onNode(hasText("Задачи") and hasClickAction()).assertDoesNotExist()
-                onNode(hasText("Группы") and hasClickAction()).assertDoesNotExist()
+                onNode(hasText("Tasks") and hasClickAction()).assertDoesNotExist()
+                onNode(hasText("Groups") and hasClickAction()).assertDoesNotExist()
             }
         }
         assertEquals("existing", Files.readString(blocked))
