@@ -13,17 +13,17 @@ data class CustomColors(
 )
 
 internal val LightCustomColors = CustomColors(
-    tertiary = green400,
-    selectedGroupBackground = blue50,
-    groupListBackground = grey50,
-    listTitleColor = grey500,
+    tertiary = Palette.Green.s400,
+    selectedGroupBackground = Palette.Blue.s50,
+    groupListBackground = Palette.Grey.s50,
+    listTitleColor = Palette.Grey.s500,
 )
 
 internal val DarkCustomColors = CustomColors(
-    tertiary = green400,
-    selectedGroupBackground = blue50,
-    groupListBackground = grey100,
-    listTitleColor = grey500,
+    tertiary = Palette.Green.s400,
+    selectedGroupBackground = Palette.Blue.s50,
+    groupListBackground = Palette.Grey.s100,
+    listTitleColor = Palette.Grey.s500,
 )
 
 internal val LocalCustomColors = staticCompositionLocalOf<CustomColors> {
