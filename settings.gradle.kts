@@ -21,6 +21,7 @@ dependencyResolutionManagement {
 include(
     ":app",
     ":core:database",
+    ":core:mvi",
     ":core:navigation",
     ":feature:hello",
     ":feature:hello:api",
