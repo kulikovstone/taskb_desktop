@@ -23,6 +23,8 @@ include(
     ":core:database",
     ":core:mvi",
     ":core:navigation",
+    ":feature:group",
+    ":feature:group:api",
     ":feature:hello",
     ":feature:hello:api",
     ":feature:home",

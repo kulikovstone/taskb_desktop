@@ -12,6 +12,7 @@ dependencies {
     implementation(project(":core:navigation"))
     implementation(project(":feature:hello:api"))
     implementation(project(":feature:home:api"))
+    implementation(project(":feature:group"))
     implementation(project(":feature:hello"))
     implementation(project(":feature:home"))
     implementation(project(":feature:settings"))

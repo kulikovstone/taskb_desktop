@@ -26,7 +26,7 @@ class AppModuleTest {
         try {
             assertSame(settings, application.koin.get<IAppSettings>())
             assertSame(application.koin.get<IAppNavigator>(), application.koin.get<IAppNavigator>())
-            assertEquals(3, application.koin.getAll<INavEntry>().size)
+            assertEquals(4, application.koin.getAll<INavEntry>().size)
             settings.completeWelcome()
         } finally {
             application.close()
