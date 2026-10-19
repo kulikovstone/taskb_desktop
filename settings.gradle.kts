@@ -30,4 +30,5 @@ include(
     ":feature:settings:api",
     ":feature:task",
     ":feature:task:api",
+    ":ui",
 )

@@ -12,6 +12,7 @@ kotlin {
 }
 
 dependencies {
+    implementation(project(":ui"))
     implementation(project(":core:navigation"))
     implementation(project(":feature:home:api"))
     implementation(project(":feature:hello:api"))

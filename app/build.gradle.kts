@@ -5,6 +5,7 @@ plugins {
 }
 
 dependencies {
+    implementation(project(":ui"))
     implementation(project(":core:database"))
     implementation(project(":core:navigation"))
     implementation(project(":feature:hello:api"))
