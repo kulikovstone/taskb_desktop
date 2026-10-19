@@ -14,24 +14,15 @@ import androidx.compose.material.CircularProgressIndicator
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.rememberCoroutineScope
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
-import kotlinx.coroutines.CancellationException
-import kotlinx.coroutines.launch
+import com.mkulikov.taskb.feature.hello.mvi.HelloIntent
+import com.mkulikov.taskb.feature.hello.mvi.HelloState
 
 @Composable
-internal fun HelloScreen(initialError: String?, onContinue: suspend () -> Unit) {
-    var isContinuing by remember { mutableStateOf(false) }
-    var error by remember(initialError) { mutableStateOf(initialError) }
-    val scope = rememberCoroutineScope()
-
+internal fun HelloScreen(state: HelloState, onIntent: (HelloIntent) -> Unit) {
     Box(
         modifier = Modifier.fillMaxSize().padding(32.dp),
         contentAlignment = Alignment.Center
@@ -47,32 +38,18 @@ internal fun HelloScreen(initialError: String?, onContinue: suspend () -> Unit) 
                 textAlign = TextAlign.Center
             )
             Button(
-                onClick = {
-                    isContinuing = true
-                    error = null
-                    scope.launch {
-                        try {
-                            onContinue()
-                        } catch (exception: CancellationException) {
-                            throw exception
-                        } catch (_: Exception) {
-                            error = "Не удалось сохранить настройки. Попробуйте ещё раз."
-                        } finally {
-                            isContinuing = false
-                        }
-                    }
-                },
-                enabled = !isContinuing
+                onClick = { onIntent(HelloIntent.Continue) },
+                enabled = !state.isContinuing && !state.isCompleted
             ) {
-                if (isContinuing) {
+                if (state.isContinuing) {
                     CircularProgressIndicator(modifier = Modifier.size(20.dp), strokeWidth = 2.dp)
                 } else {
                     Text("Продолжить", modifier = Modifier.padding(horizontal = 16.dp, vertical = 4.dp))
                 }
             }
-            if (error != null) {
+            if (state.error != null) {
                 Text(
-                    text = error.orEmpty(),
+                    text = state.error.orEmpty(),
                     color = MaterialTheme.colors.error,
                     style = MaterialTheme.typography.body2,
                     textAlign = TextAlign.Center

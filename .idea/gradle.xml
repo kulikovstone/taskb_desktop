@@ -21,6 +21,7 @@
             <option value="$PROJECT_DIR$/feature/settings/api" />
             <option value="$PROJECT_DIR$/feature/task" />
             <option value="$PROJECT_DIR$/feature/task/api" />
+            <option value="$PROJECT_DIR$/ui" />
           </set>
         </option>
         <option name="myGradleHome" value="" />
