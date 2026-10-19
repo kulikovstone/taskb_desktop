@@ -1,5 +1,6 @@
 package com.mkulikov.taskb.di
 
+import com.mkulikov.taskb.AppVersion
 import com.mkulikov.taskb.core.database.DatabasePaths
 import com.mkulikov.taskb.core.database.di.databaseModule
 import com.mkulikov.taskb.core.navigation.di.navigationModule
@@ -16,7 +17,7 @@ internal fun appModule(databaseFile: Path = DatabasePaths.databaseFile()) = modu
         settingsModule(),
         navigationModule(),
         helloModule(),
-        homeModule(),
+        homeModule(AppVersion.value),
         taskModule(),
     )
 }

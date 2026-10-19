@@ -4,6 +4,8 @@ plugins {
     alias(libs.plugins.compose.compiler)
 }
 
+val applicationVersion = project.version.toString()
+
 dependencies {
     implementation(project(":ui"))
     implementation(project(":core:database"))
@@ -34,6 +36,14 @@ tasks.test {
     useJUnitPlatform()
 }
 
+tasks.processResources {
+    val versionName = applicationVersion
+    inputs.property("applicationVersion", versionName)
+    filesMatching("app-version.txt") {
+        expand("version" to versionName)
+    }
+}
+
 compose.desktop {
     application {
         mainClass = "com.mkulikov.taskb.MainKt"
@@ -48,9 +58,11 @@ compose.desktop {
 
         nativeDistributions {
             packageName = "TaskB"
-            packageVersion = "0.1.0"
+            packageVersion = applicationVersion
 
             windows {
+                // MSI has more room for the commit-based revision in BUILD than in MINOR.
+                packageVersion = applicationVersion.replace(".", ".0.")
                 iconFile.set(project.file("packaging/icons/taskb.ico"))
             }
             macOS {

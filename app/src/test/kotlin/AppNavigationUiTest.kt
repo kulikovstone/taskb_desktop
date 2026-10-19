@@ -5,6 +5,7 @@ import androidx.compose.ui.test.ExperimentalTestApi
 import androidx.compose.ui.test.assertIsDisplayed
 import androidx.compose.ui.test.hasText
 import androidx.compose.ui.test.onNodeWithText
+import androidx.compose.ui.test.onRoot
 import androidx.compose.ui.test.performClick
 import androidx.compose.ui.test.v2.runComposeUiTest
 import com.mkulikov.taskb.feature.settings.api.IAppSettings
@@ -61,6 +62,10 @@ class AppNavigationUiTest {
                 }
                 onNodeWithText("Главный экран").assertIsDisplayed()
                 onNodeWithText("Добро пожаловать в TaskB").assertDoesNotExist()
+                val version = onNodeWithText("Версия ${AppVersion.value}").assertIsDisplayed()
+                val screenBounds = onRoot().fetchSemanticsNode().boundsInRoot
+                val versionBounds = version.fetchSemanticsNode().boundsInRoot
+                assertTrue(versionBounds.center.y > screenBounds.top + screenBounds.height * 0.8f)
             }
         }
     }

@@ -7,8 +7,8 @@ import com.mkulikov.taskb.core.navigation.INavEntry
 import com.mkulikov.taskb.feature.home.HomeScreen
 import com.mkulikov.taskb.feature.home.api.HomeRoute
 
-internal class HomeNavEntry : INavEntry {
+internal class HomeNavEntry(private val appVersion: String) : INavEntry {
     override fun register(scope: EntryProviderScope<NavKey>, navigator: IAppNavigator) {
-        scope.entry<HomeRoute> { HomeScreen() }
+        scope.entry<HomeRoute> { HomeScreen(appVersion = appVersion) }
     }
 }
