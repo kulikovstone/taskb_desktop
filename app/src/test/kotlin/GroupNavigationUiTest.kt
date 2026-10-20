@@ -54,6 +54,8 @@ class GroupNavigationUiTest {
                 onNodeWithText("No groups yet.").assertIsDisplayed()
                 onNodeWithContentDescription("Add group").performClick()
                 onNodeWithText("New group").assertIsDisplayed()
+                onNodeWithText("Statistics").assertDoesNotExist()
+                onNodeWithText("Delete").assertDoesNotExist()
                 onNodeWithContentDescription("Save group").assertIsNotEnabled()
                 onNodeWithText("Light green").performClick()
                 onNodeWithText("Light green").assertIsSelected()
@@ -64,6 +66,7 @@ class GroupNavigationUiTest {
                 onNodeWithText("Home").performClick()
                 waitForText("Group")
                 waitUntil(timeoutMillis = 10_000) { onAllNodes(hasSetTextAction()).fetchSemanticsNodes().isNotEmpty() }
+                onNodeWithText("Statistics").assertIsDisplayed()
                 onNodeWithContentDescription("Save group").assertIsNotEnabled()
                 onNode(hasSetTextAction()).performTextReplacement(" Personal ")
                 onNodeWithText("Red").performClick()

@@ -11,10 +11,11 @@ import com.mkulikov.taskb.core.navigation.IAppNavigator
 import com.mkulikov.taskb.core.navigation.INavEntry
 import com.mkulikov.taskb.core.navigation.rememberNavEntryResource
 import com.mkulikov.taskb.feature.group.api.GroupRoute
-import com.mkulikov.taskb.feature.group.screen.group_editor.GroupEditorArgs
-import com.mkulikov.taskb.feature.group.screen.group_editor.GroupEditorStore
+import com.mkulikov.taskb.feature.group.screen.add_group.AddGroupScreen
+import com.mkulikov.taskb.feature.group.screen.add_group.AddGroupStore
+import com.mkulikov.taskb.feature.group.screen.edit_group.EditGroupScreen
+import com.mkulikov.taskb.feature.group.screen.edit_group.EditGroupStore
 import com.mkulikov.taskb.feature.group.screen.group_list.GroupListStore
-import com.mkulikov.taskb.feature.group.screen.group_editor.GroupEditorScreen
 import com.mkulikov.taskb.feature.group.screen.group_list.GroupListScreen
 import org.koin.compose.getKoin
 import org.koin.core.parameter.parametersOf
@@ -35,20 +36,33 @@ internal class GroupNavEntry : INavEntry {
                 onEdit = { navigator.navigate(GroupInternalRoute.Edit(it)) },
             )
         }
-        scope.entry<GroupInternalRoute.Add> { GroupEditorEntry(groupId = null, navigator = navigator) }
-        scope.entry<GroupInternalRoute.Edit> { GroupEditorEntry(groupId = it.groupId, navigator = navigator) }
+        scope.entry<GroupInternalRoute.Add> { AddGroupEntry(navigator = navigator) }
+        scope.entry<GroupInternalRoute.Edit> { EditGroupEntry(groupId = it.groupId, navigator = navigator) }
     }
 }
 
 @Composable
-private fun GroupEditorEntry(groupId: Int?, navigator: IAppNavigator) {
+private fun AddGroupEntry(navigator: IAppNavigator) {
     val koin = getKoin()
     val context = rememberCoroutineScope().coroutineContext
     val dispatcher = checkNotNull(context[ContinuationInterceptor] as? CoroutineDispatcher)
-    val store = rememberNavEntryResource(GroupEditorStore::class) {
-        koin.get<GroupEditorStore> { parametersOf(GroupEditorArgs(groupId), dispatcher) }
+    val store = rememberNavEntryResource(AddGroupStore::class) {
+        koin.get<AddGroupStore> { parametersOf(dispatcher) }
     }
     val state by store.state.collectAsState()
     LaunchedEffect(store, state.isFinished) { if (state.isFinished) navigator.back() }
-    GroupEditorScreen(state = state, onIntent = store::accept, onBack = navigator::back)
+    AddGroupScreen(state = state, onIntent = store::accept, onBack = navigator::back)
+}
+
+@Composable
+private fun EditGroupEntry(groupId: Int, navigator: IAppNavigator) {
+    val koin = getKoin()
+    val context = rememberCoroutineScope().coroutineContext
+    val dispatcher = checkNotNull(context[ContinuationInterceptor] as? CoroutineDispatcher)
+    val store = rememberNavEntryResource(EditGroupStore::class) {
+        koin.get<EditGroupStore> { parametersOf(groupId, dispatcher) }
+    }
+    val state by store.state.collectAsState()
+    LaunchedEffect(store, state.isFinished) { if (state.isFinished) navigator.back() }
+    EditGroupScreen(state = state, onIntent = store::accept, onBack = navigator::back)
 }

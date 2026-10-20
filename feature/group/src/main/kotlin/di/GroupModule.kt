@@ -2,8 +2,8 @@ package com.mkulikov.taskb.feature.group.di
 
 import com.mkulikov.taskb.core.navigation.INavEntry
 import com.mkulikov.taskb.core.database.AppDatabase
-import com.mkulikov.taskb.feature.group.screen.group_editor.GroupEditorArgs
-import com.mkulikov.taskb.feature.group.screen.group_editor.GroupEditorStore
+import com.mkulikov.taskb.feature.group.screen.add_group.AddGroupStore
+import com.mkulikov.taskb.feature.group.screen.edit_group.EditGroupStore
 import com.mkulikov.taskb.feature.group.screen.group_list.GroupListStore
 import com.mkulikov.taskb.feature.group.navigation.GroupNavEntry
 import com.mkulikov.taskb.feature.group.repository.GroupRepository
@@ -16,9 +16,15 @@ fun groupModule() = module {
     single<GroupRepository> { RoomGroupRepository(inject()) }
     factory { GroupListStore(get()) }
     factory { params ->
-        GroupEditorStore(
+        AddGroupStore(
             repository = get(),
-            groupId = params.get<GroupEditorArgs>().groupId,
+            dispatcher = params.get(),
+        )
+    }
+    factory { params ->
+        EditGroupStore(
+            repository = get(),
+            groupId = params.get(),
             dispatcher = params.get(),
         )
     }
