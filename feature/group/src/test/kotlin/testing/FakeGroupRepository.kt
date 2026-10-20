@@ -2,13 +2,13 @@ package com.mkulikov.taskb.feature.group.testing
 
 import com.mkulikov.taskb.feature.group.model.Group
 import com.mkulikov.taskb.feature.group.model.GroupColor
-import com.mkulikov.taskb.feature.group.repository.GroupRepository
+import com.mkulikov.taskb.feature.group.repository.IGroupRepository
 import com.mkulikov.taskb.feature.group.repository.GroupWriteResult
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.emitAll
 import kotlinx.coroutines.flow.flow
 
-internal class FakeGroupRepository : GroupRepository {
+internal class FakeGroupRepository : IGroupRepository {
     val values = MutableStateFlow(emptyList<Group>())
     var group: Group? = Group(7, "Work", GroupColor.Blue)
     var failRead = false

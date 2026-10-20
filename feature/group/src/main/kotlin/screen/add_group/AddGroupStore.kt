@@ -2,13 +2,13 @@ package com.mkulikov.taskb.feature.group.screen.add_group
 
 import com.mkulikov.taskb.core.mvi.CoroutineStore
 import com.mkulikov.taskb.feature.group.model.GroupColor
-import com.mkulikov.taskb.feature.group.repository.GroupRepository
+import com.mkulikov.taskb.feature.group.repository.IGroupRepository
 import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.Dispatchers
 
 internal class AddGroupStore(
-    private val repository: GroupRepository,
+    private val repository: IGroupRepository,
     initialColor: GroupColor = GroupColor.entries.random(),
     dispatcher: CoroutineDispatcher = Dispatchers.Default,
 ) : CoroutineStore<AddGroupIntent, AddGroupState, AddGroupMessage>(

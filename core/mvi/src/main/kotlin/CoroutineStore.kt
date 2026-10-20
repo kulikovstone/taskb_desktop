@@ -23,7 +23,7 @@ abstract class CoroutineStore<Intent : Any, State : Any, Message : Any>(
     initialState: State,
     private val reducer: (State, Message) -> State,
     context: CoroutineContext = Dispatchers.Default,
-) : Store<Intent, State> {
+) : IStore<Intent, State> {
     private val job = Job(context[Job])
     private val scope = CoroutineScope(context + job)
     private val events = Channel<Event<Intent, Message>>(Channel.UNLIMITED)

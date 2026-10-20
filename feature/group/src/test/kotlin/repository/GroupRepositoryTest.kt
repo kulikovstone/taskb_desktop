@@ -20,14 +20,14 @@ import kotlinx.coroutines.withTimeout
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.io.TempDir
 
-class RoomGroupRepositoryTest {
+class GroupRepositoryTest {
     @TempDir lateinit var directory: Path
 
     @Test
     fun `flow publishes creation editing and deletion`() = runBlocking {
         val database = AppDatabase.open(directory.resolve("groups.db"))
         try {
-            val repository = RoomGroupRepository(lazy { database.groupDao() })
+            val repository = GroupRepository(lazy { database.groupDao() })
             val updates = Channel<List<Group>>(Channel.UNLIMITED)
             val observer = launch { repository.groups.collect { updates.send(it) } }
             try {
@@ -53,13 +53,13 @@ class RoomGroupRepositoryTest {
         val file = directory.resolve("groups.db")
         val database = AppDatabase.open(file)
         try {
-            val repository = RoomGroupRepository(lazy { database.groupDao() })
+            val repository = GroupRepository(lazy { database.groupDao() })
             repository.add("Personal", GroupColor.LightGreen)
             repository.add("Without a color", GroupColor.Transparent)
         } finally { database.close() }
         val reopened = AppDatabase.open(file)
         try {
-            val groups = RoomGroupRepository(lazy { reopened.groupDao() }).groups.first()
+            val groups = GroupRepository(lazy { reopened.groupDao() }).groups.first()
             assertEquals(listOf("Personal", "Without a color"), groups.map { it.name })
             assertEquals(listOf(GroupColor.LightGreen, GroupColor.Transparent), groups.map { it.color })
         } finally { reopened.close() }
@@ -69,7 +69,7 @@ class RoomGroupRepositoryTest {
     fun `case insensitive uniqueness protects inserts and updates`() = runBlocking {
         val database = AppDatabase.open(directory.resolve("groups.db"))
         try {
-            val repository = RoomGroupRepository(lazy { database.groupDao() })
+            val repository = GroupRepository(lazy { database.groupDao() })
             assertEquals(GroupWriteResult.Saved, repository.add("Work", GroupColor.Blue))
             assertEquals(GroupWriteResult.NameConflict, repository.add(" work ", GroupColor.Red))
             repository.add("Home", GroupColor.Green)
@@ -90,7 +90,7 @@ class RoomGroupRepositoryTest {
     fun `concurrent inserts cannot create duplicate groups`() = runBlocking {
         val database = AppDatabase.open(directory.resolve("groups.db"))
         try {
-            val repository = RoomGroupRepository(lazy { database.groupDao() })
+            val repository = GroupRepository(lazy { database.groupDao() })
             val results = coroutineScope {
                 List(12) { async { repository.add("Work", GroupColor.Blue) } }.awaitAll()
             }

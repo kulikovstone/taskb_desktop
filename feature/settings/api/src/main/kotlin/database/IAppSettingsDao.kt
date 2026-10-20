@@ -5,7 +5,7 @@ import androidx.room3.Query
 import androidx.room3.Upsert
 
 @Dao
-interface AppSettingsDao {
+interface IAppSettingsDao {
     @Query("SELECT value FROM application_settings WHERE `key` = :key")
     suspend fun getValue(key: String): String?
 

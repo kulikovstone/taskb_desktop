@@ -8,7 +8,7 @@ import androidx.room3.Update
 import kotlinx.coroutines.flow.Flow
 
 @Dao
-interface GroupDao {
+interface IGroupDao {
     @Query("SELECT * FROM `groups` ORDER BY id")
     fun observeGroups(): Flow<List<GroupEntity>>
 

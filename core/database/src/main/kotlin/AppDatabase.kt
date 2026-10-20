@@ -6,9 +6,9 @@ import androidx.room3.RoomDatabase
 import androidx.sqlite.SQLiteConnection
 import androidx.sqlite.SQLiteDriver
 import androidx.sqlite.driver.bundled.BundledSQLiteDriver
-import com.mkulikov.taskb.feature.group.api.database.GroupDao
+import com.mkulikov.taskb.feature.group.api.database.IGroupDao
 import com.mkulikov.taskb.feature.group.api.database.GroupEntity
-import com.mkulikov.taskb.feature.settings.api.database.AppSettingsDao
+import com.mkulikov.taskb.feature.settings.api.database.IAppSettingsDao
 import com.mkulikov.taskb.feature.settings.api.database.ApplicationSetting
 import kotlinx.coroutines.Dispatchers
 import java.nio.file.Files
@@ -16,8 +16,8 @@ import java.nio.file.Path
 
 @Database(entities = [ApplicationSetting::class, GroupEntity::class], version = 2)
 abstract class AppDatabase : RoomDatabase() {
-    abstract fun settingsDao(): AppSettingsDao
-    abstract fun groupDao(): GroupDao
+    abstract fun settingsDao(): IAppSettingsDao
+    abstract fun groupDao(): IGroupDao
 
     companion object {
         fun open(file: Path = DatabasePaths.databaseFile()): AppDatabase {
