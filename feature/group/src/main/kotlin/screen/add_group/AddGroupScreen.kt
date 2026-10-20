@@ -28,13 +28,24 @@ import com.mkulikov.taskb.ui.dialog.TaskBMessageDialog
 import com.mkulikov.taskb.ui.icon.TaskBIcons
 
 @Composable
-internal fun AddGroupScreen(state: AddGroupState, onIntent: (AddGroupIntent) -> Unit, onBack: () -> Unit) {
+internal fun AddGroupScreen(
+    state: AddGroupState,
+    onIntent: (AddGroupIntent) -> Unit,
+    onBack: () -> Unit,
+    isInPane: Boolean = false,
+) {
     val focusRequester = remember { FocusRequester() }
     Scaffold(
         modifier = Modifier.fillMaxSize(),
         backgroundColor = MaterialTheme.colors.background,
         topBar = {
-            TaskBTopAppBar(title = "New group", onBack = onBack, backEnabled = !state.isSaving) {
+            TaskBTopAppBar(
+                title = "New group",
+                onBack = onBack,
+                backEnabled = !state.isSaving,
+                backIcon = if (isInPane) TaskBIcons.Clear else TaskBIcons.Back,
+                backContentDescription = if (isInPane) "Close group" else "Back",
+            ) {
                 IconButton(onClick = { onIntent(AddGroupIntent.Save) }, enabled = state.canSave) {
                     Icon(TaskBIcons.Done, contentDescription = "Save group")
                 }

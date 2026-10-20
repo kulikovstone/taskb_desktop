@@ -2,6 +2,8 @@ package com.mkulikov.taskb.core.navigation
 
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
+import androidx.compose.foundation.layout.BoxWithConstraints
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.ui.Modifier
 import androidx.navigation3.runtime.NavKey
 import androidx.navigation3.runtime.entryProvider
@@ -20,16 +22,22 @@ fun AppRoot(startDestination: NavKey, modifier: Modifier = Modifier) {
         navigator.setStartDestination(startDestination)
     }
 
-    NavDisplay(
-        backStack = navigator.backStack,
-        onBack = navigator::back,
-        modifier = modifier,
-        entryDecorators = listOf(
-            rememberSaveableStateHolderNavEntryDecorator(),
-            rememberEntryResourceNavEntryDecorator(),
-        ),
-        entryProvider = entryProvider {
-            entries.forEach { it.register(this, navigator) }
+    BoxWithConstraints(modifier = modifier.fillMaxSize()) {
+        val sceneStrategies = remember(entries, maxWidth) {
+            entries.mapNotNull { it.sceneStrategy(maxWidth) }
         }
-    )
+        NavDisplay(
+            backStack = navigator.backStack,
+            onBack = navigator::back,
+            modifier = Modifier.fillMaxSize(),
+            sceneStrategies = sceneStrategies,
+            entryDecorators = listOf(
+                rememberSaveableStateHolderNavEntryDecorator(),
+                rememberEntryResourceNavEntryDecorator(),
+            ),
+            entryProvider = entryProvider {
+                entries.forEach { it.register(this, navigator) }
+            },
+        )
+    }
 }

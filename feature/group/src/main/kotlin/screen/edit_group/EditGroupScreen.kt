@@ -29,12 +29,23 @@ import com.mkulikov.taskb.ui.dialog.TaskBMessageDialog
 import com.mkulikov.taskb.ui.icon.TaskBIcons
 
 @Composable
-internal fun EditGroupScreen(state: EditGroupState, onIntent: (EditGroupIntent) -> Unit, onBack: () -> Unit) {
+internal fun EditGroupScreen(
+    state: EditGroupState,
+    onIntent: (EditGroupIntent) -> Unit,
+    onBack: () -> Unit,
+    isInPane: Boolean = false,
+) {
     Scaffold(
         modifier = Modifier.fillMaxSize(),
         backgroundColor = MaterialTheme.colors.background,
         topBar = {
-            TaskBTopAppBar(title = "Group", onBack = onBack, backEnabled = !state.isSaving && !state.isDeleting) {
+            TaskBTopAppBar(
+                title = "Group",
+                onBack = onBack,
+                backEnabled = !state.isSaving && !state.isDeleting,
+                backIcon = if (isInPane) TaskBIcons.Clear else TaskBIcons.Back,
+                backContentDescription = if (isInPane) "Close group" else "Back",
+            ) {
                 IconButton(onClick = { onIntent(EditGroupIntent.Save) }, enabled = state.canSave) {
                     Icon(TaskBIcons.Done, contentDescription = "Save group")
                 }

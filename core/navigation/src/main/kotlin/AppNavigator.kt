@@ -17,6 +17,19 @@ internal class AppNavigator : IAppNavigator {
         backStack.add(key)
     }
 
+    override fun replaceTop(key: NavKey) {
+        if (backStack.isEmpty()) backStack.add(key) else backStack[backStack.lastIndex] = key
+    }
+
+    override fun popUpTo(key: NavKey, inclusive: Boolean) {
+        val index = backStack.indexOfLast { it == key }
+        if (index < 0) return
+        val size = (index + if (inclusive) 0 else 1).coerceAtLeast(1)
+        Snapshot.withMutableSnapshot {
+            while (backStack.size > size) backStack.removeLast()
+        }
+    }
+
     override fun replaceAll(key: NavKey) {
         Snapshot.withMutableSnapshot {
             backStack.clear()

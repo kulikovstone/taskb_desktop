@@ -1,5 +1,12 @@
 package com.mkulikov.taskb
 
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.fillMaxHeight
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.width
+import androidx.compose.runtime.State
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.ui.Modifier
 import androidx.compose.ui.semantics.SemanticsProperties
 import androidx.compose.ui.geometry.Size
 import androidx.compose.ui.graphics.toArgb
@@ -8,6 +15,7 @@ import androidx.compose.ui.test.ExperimentalTestApi
 import androidx.compose.ui.test.assertIsDisplayed
 import androidx.compose.ui.test.assertIsNotEnabled
 import androidx.compose.ui.test.assertIsSelected
+import androidx.compose.ui.test.assertTextEquals
 import androidx.compose.ui.test.captureToImage
 import androidx.compose.ui.test.hasAnyAncestor
 import androidx.compose.ui.test.hasClickAction
@@ -23,6 +31,8 @@ import androidx.compose.ui.test.performTextInput
 import androidx.compose.ui.test.performTextReplacement
 import androidx.compose.ui.test.SkikoComposeUiTest
 import androidx.compose.ui.test.v2.runSkikoComposeUiTest
+import androidx.compose.ui.unit.Dp
+import androidx.compose.ui.unit.dp
 import com.mkulikov.taskb.core.database.AppDatabase
 import com.mkulikov.taskb.feature.group.api.database.GroupEntity
 import com.mkulikov.taskb.feature.settings.api.IAppSettings
@@ -132,9 +142,124 @@ class GroupNavigationUiTest {
         }
     }
 
-    private fun SkikoComposeUiTest.setApp(application: KoinApplication, darkTheme: Boolean) {
+    @Test
+    fun `wide layout keeps the list visible and replaces the right pane`() {
+        withAppKoin(directory.resolve("wide-groups.db")) { application ->
+            runBlocking {
+                application.koin.get<IAppSettings>().completeWelcome()
+                val dao = application.koin.get<AppDatabase>().groupDao()
+                dao.insert(GroupEntity(name = "Work", color = Palette.Blue.s400.toArgb()))
+                dao.insert(GroupEntity(name = "Personal", color = Palette.Green.s400.toArgb()))
+            }
+            runSkikoComposeUiTest(size = Size(1200f, 900f)) {
+                setApp(application, darkTheme = false)
+                openGroups()
+                waitForText("Work")
+                onNodeWithText("Select a group or create a new one.").assertIsDisplayed()
+                groupRow("Work").performClick()
+                waitForField("Work")
+                groupRow("Work").assertIsSelected()
+                onNodeWithText("Groups").assertIsDisplayed()
+                onNode(hasSetTextAction()).performTextReplacement("Unsaved work")
+                groupRow("Work").performClick()
+                onNode(hasSetTextAction()).assertTextEquals("Unsaved work")
+                groupRow("Personal").performClick()
+                waitForField("Personal")
+                groupRow("Personal").assertIsSelected()
+                screenshot("groups-wide-edit-light")
+                onNodeWithContentDescription("Add group").performClick()
+                waitForText("New group")
+                onNodeWithContentDescription("Close group").performClick()
+                waitForText("Select a group or create a new one.")
+                onNodeWithText("Group").assertDoesNotExist()
+                onNodeWithContentDescription("Add group").performClick()
+                onNode(hasSetTextAction()).performTextInput("Projects")
+                saveGroup()
+                waitForText("Projects")
+                onNodeWithText("Select a group or create a new one.").assertIsDisplayed()
+                groupRow("Projects").performClick()
+                waitForField("Projects")
+                onNodeWithContentDescription("Back").performClick()
+                waitUntil(timeoutMillis = 10_000) { onAllNodes(hasText("Tasks") and hasClickAction()).fetchSemanticsNodes().isNotEmpty() }
+                openGroups()
+                onNodeWithText("Select a group or create a new one.").assertIsDisplayed()
+            }
+        }
+    }
+
+    @Test
+    fun `resizing keeps add and edit drafts and switches at the breakpoint`() {
+        withAppKoin(directory.resolve("resizable-groups.db")) { application ->
+            runBlocking {
+                application.koin.get<IAppSettings>().completeWelcome()
+                application.koin.get<AppDatabase>().groupDao().insert(GroupEntity(name = "Work", color = Palette.Blue.s400.toArgb()))
+            }
+            val width = mutableStateOf(400.dp)
+            runSkikoComposeUiTest(size = Size(1200f, 900f)) {
+                setApp(application, darkTheme = true, contentWidth = width)
+                openGroups()
+                waitForText("Work")
+                groupRow("Work").performClick()
+                waitForField("Work")
+                onNode(hasSetTextAction()).performTextReplacement("Work draft")
+                onNodeWithText("Green").performClick()
+                runOnIdle { width.value = 1200.dp }
+                waitForText("Groups")
+                onNode(hasSetTextAction()).assertTextEquals("Work draft")
+                onNodeWithText("Green").assertIsSelected()
+                groupRow("Work").assertIsSelected()
+                screenshot("groups-wide-edit-dark")
+                runOnIdle { width.value = 400.dp }
+                waitForIdle()
+                onNodeWithText("Groups").assertDoesNotExist()
+                onNode(hasSetTextAction()).assertTextEquals("Work draft")
+                onNodeWithContentDescription("Back").performClick()
+                waitForText("Groups")
+                onNodeWithContentDescription("Add group").performClick()
+                onNode(hasSetTextAction()).performTextInput("Travel draft")
+                onNodeWithText("Red").performClick()
+                runOnIdle { width.value = 840.dp }
+                waitForText("Groups")
+                onNodeWithContentDescription("Close group").assertIsDisplayed()
+                onNode(hasSetTextAction()).assertTextEquals("Travel draft")
+                onNodeWithText("Red").assertIsSelected()
+                runOnIdle { width.value = 839.dp }
+                waitForIdle()
+                onNodeWithText("Groups").assertDoesNotExist()
+                onNodeWithContentDescription("Back").assertIsDisplayed()
+                onNode(hasSetTextAction()).assertTextEquals("Travel draft")
+                runOnIdle { width.value = 1200.dp }
+                waitForText("Groups")
+                onNodeWithContentDescription("Close group").performClick()
+                waitForText("Select a group or create a new one.")
+                onNodeWithContentDescription("Add group").performClick()
+                onNodeWithText("Enter group name").assertIsDisplayed()
+                onNodeWithContentDescription("Save group").assertIsNotEnabled()
+                onNodeWithContentDescription("Close group").performClick()
+            }
+            val groups = runBlocking { application.koin.get<AppDatabase>().groupDao().observeGroups().first() }
+            assertEquals("Work", groups.single().name)
+            assertEquals(Palette.Blue.s400.toArgb(), groups.single().color)
+        }
+    }
+
+    private fun SkikoComposeUiTest.groupRow(name: String) = onNode(hasText(name) and hasClickAction() and !hasSetTextAction())
+
+    private suspend fun SkikoComposeUiTest.waitForField(name: String) {
+        waitUntil(timeoutMillis = 10_000) { onAllNodes(hasSetTextAction() and hasText(name)).fetchSemanticsNodes().isNotEmpty() }
+    }
+
+    private fun SkikoComposeUiTest.setApp(application: KoinApplication, darkTheme: Boolean, contentWidth: State<Dp>? = null) {
         val settings = application.koin.get<IAppSettings>()
-        setContent { KoinIsolatedContext(application) { TaskBTheme(darkTheme) { TaskBApp(settings) } } }
+        setContent {
+            KoinIsolatedContext(application) {
+                TaskBTheme(darkTheme) {
+                    Box(if (contentWidth == null) Modifier.fillMaxSize() else Modifier.width(contentWidth.value).fillMaxHeight()) {
+                        TaskBApp(settings)
+                    }
+                }
+            }
+        }
     }
 
     private suspend fun SkikoComposeUiTest.saveGroup() {

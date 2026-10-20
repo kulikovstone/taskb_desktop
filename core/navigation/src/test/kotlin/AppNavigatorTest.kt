@@ -41,6 +41,41 @@ class AppNavigatorTest {
         assertEquals(listOf<NavKey>(FirstRoute), navigator.backStack.toList())
     }
 
+    @Test
+    fun `replacing a detail keeps one back step to its list`() {
+        val navigator = AppNavigator()
+        navigator.setStartDestination(FirstRoute)
+        navigator.navigate(SecondRoute)
+        navigator.replaceTop(ThirdRoute)
+        assertEquals(listOf<NavKey>(FirstRoute, ThirdRoute), navigator.backStack.toList())
+        navigator.back()
+        assertEquals(listOf<NavKey>(FirstRoute), navigator.backStack.toList())
+    }
+
+    @Test
+    fun `popUpTo can close a list and its detail together`() {
+        val navigator = AppNavigator()
+        navigator.setStartDestination(FirstRoute)
+        navigator.navigate(SecondRoute)
+        navigator.navigate(ThirdRoute)
+        navigator.popUpTo(SecondRoute)
+        assertEquals(listOf<NavKey>(FirstRoute, SecondRoute), navigator.backStack.toList())
+        navigator.navigate(ThirdRoute)
+        navigator.popUpTo(SecondRoute, inclusive = true)
+        assertEquals(listOf<NavKey>(FirstRoute), navigator.backStack.toList())
+    }
+
+    @Test
+    fun `popUpTo ignores missing destinations and keeps the root`() {
+        val navigator = AppNavigator()
+        navigator.setStartDestination(FirstRoute)
+        navigator.navigate(SecondRoute)
+        navigator.popUpTo(ThirdRoute, inclusive = true)
+        assertEquals(listOf<NavKey>(FirstRoute, SecondRoute), navigator.backStack.toList())
+        navigator.popUpTo(FirstRoute, inclusive = true)
+        assertEquals(listOf<NavKey>(FirstRoute), navigator.backStack.toList())
+    }
+
     private data object FirstRoute : NavKey
     private data object SecondRoute : NavKey
     private data object ThirdRoute : NavKey

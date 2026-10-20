@@ -17,7 +17,8 @@ dependencies {
     api(libs.koin.core)
     api(libs.compose.ui)
     implementation(libs.compose.runtime)
-    implementation(libs.navigation3.ui)
+    api(libs.navigation3.ui)
+    implementation(libs.compose.foundation)
     implementation(libs.koin.compose)
     testImplementation(libs.kotlin.test)
 }

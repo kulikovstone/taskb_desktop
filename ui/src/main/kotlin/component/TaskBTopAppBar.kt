@@ -9,6 +9,7 @@ import androidx.compose.material.Text
 import androidx.compose.material.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
@@ -21,6 +22,8 @@ fun TaskBTopAppBar(
     onBack: () -> Unit,
     modifier: Modifier = Modifier,
     backEnabled: Boolean = true,
+    backIcon: ImageVector = TaskBIcons.Back,
+    backContentDescription: String = "Back",
     actions: @Composable RowScope.() -> Unit = {},
 ) {
     TopAppBar(
@@ -38,7 +41,7 @@ fun TaskBTopAppBar(
         },
         navigationIcon = {
             IconButton(onClick = onBack, enabled = backEnabled) {
-                Icon(TaskBIcons.Back, contentDescription = "Back")
+                Icon(backIcon, contentDescription = backContentDescription)
             }
         },
         actions = actions,
