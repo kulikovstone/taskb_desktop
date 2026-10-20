@@ -17,10 +17,3 @@ internal sealed interface AddGroupDialog {
     data object NameConflict : AddGroupDialog
     data class Error(val message: String) : AddGroupDialog
 }
-
-internal sealed interface AddGroupIntent {
-    data class NameChanged(val name: String) : AddGroupIntent
-    data class ColorChanged(val color: GroupColor) : AddGroupIntent
-    data object Save : AddGroupIntent
-    data object DismissDialog : AddGroupIntent
-}
