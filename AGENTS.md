@@ -1,22 +1,22 @@
-# UI text
+# Тексты интерфейса
 
-Use English for new user-facing labels and messages in the application.
+Новые надписи и сообщения, которые видит пользователь в приложении, должны быть на английском языке.
 
-# Feature screens
+# Экраны фич
 
-Place each feature screen in `screen/<screen_name>/` together with its Store, state, intents,
-reducer, and other screen-specific classes. Do not create feature-level `mvi` folders.
-Mirror this structure in screen-specific tests. Keep code shared by several screens outside
-the individual screen folders.
+Каждый экран фичи размещается в папке `screen/<screen_name>/` вместе со своим Store,
+состоянием, Intent, reducer и другими классами, относящимися к этому экрану.
+Не создавайте папки `mvi` на уровне фичи.
+Для тестов конкретного экрана используйте такую же структуру папок.
+Общий для нескольких экранов код размещайте вне папок отдельных экранов.
 
-# Screen MVI files
+# Файлы MVI для экранов
 
-Keep the MVI declarations for every screen in separate files within its screen folder:
+Для каждого экрана размещайте объявления MVI в отдельных файлах внутри папки экрана:
 
-- `<Screen>State.kt` contains the screen state, its derived properties, and state-related
-  models such as dialog types. Keep dialog models in the state file.
-- `<Screen>Intent.kt` contains the screen's Intent type and its variants.
-- `<Screen>Reducer.kt` contains the screen's Message type and its variants together with
-  the `reduce<Screen>` function.
-- `<Screen>Store.kt` contains the Store implementation, without declaring State, Intent,
-  Message, or the reducer in the same file.
+- `<Screen>State.kt` — состояние экрана, его вычисляемые свойства и связанные с состоянием
+  модели, например типы диалогов. Модели диалогов оставляйте в файле состояния.
+- `<Screen>Intent.kt` — тип Intent экрана и его варианты.
+- `<Screen>Reducer.kt` — тип Message экрана и его варианты вместе с функцией `reduce<Screen>`.
+- `<Screen>Store.kt` — реализация Store. Не объявляйте State, Intent, Message или reducer
+  в этом же файле.
