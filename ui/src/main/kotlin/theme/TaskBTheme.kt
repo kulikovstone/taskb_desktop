@@ -11,20 +11,22 @@ fun TaskBTheme(
     darkTheme: Boolean = isSystemInDarkTheme(),
     content: @Composable () -> Unit,
 ) {
-    CompositionLocalProvider(
-        LocalCustomColors provides if (darkTheme) DarkCustomColors else LightCustomColors,
-    ) {
+    val colors = if (darkTheme) DarkTaskBColors else LightTaskBColors
+    CompositionLocalProvider(LocalTaskBColors provides colors) {
         MaterialTheme(
-            colors = if (darkTheme) DarkColors else LightColors,
-            typography = TaskBTypography,
+            colors = colors.toMaterialColors(darkTheme),
+            typography = TaskBTypography.material,
             content = content,
         )
     }
 }
 
 object TaskBTheme {
-    val customColors: CustomColors
+    val colors: TaskBColors
         @Composable
         @ReadOnlyComposable
-        get() = LocalCustomColors.current
+        get() = LocalTaskBColors.current
+
+    val typography: TaskBTypography
+        get() = TaskBTypography
 }

@@ -4,12 +4,14 @@ import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.defaultMinSize
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.Button
+import androidx.compose.material.ButtonDefaults
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.mkulikov.taskb.ui.theme.TaskBTheme
 
 @Composable
 fun TaskBButton(
@@ -24,6 +26,10 @@ fun TaskBButton(
         enabled = enabled,
         shape = CircleShape,
         elevation = null,
+        colors = ButtonDefaults.buttonColors(
+            backgroundColor = TaskBTheme.colors.actionFill,
+            contentColor = TaskBTheme.colors.onAction,
+        ),
         contentPadding = PaddingValues(horizontal = 24.dp, vertical = 8.dp),
     ) {
         Text(

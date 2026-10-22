@@ -85,7 +85,7 @@ class AppNavigationUiTest {
                 onNode(hasText("Groups") and hasClickAction()).performClick()
                 onNodeWithContentDescription("Back").assertIsDisplayed()
                 onNodeWithText("Groups").assertIsDisplayed()
-                onNode(hasText("Tasks") and hasClickAction()).assertDoesNotExist()
+                onNodeWithText("Version ${AppVersion.value}").assertDoesNotExist()
                 onNodeWithContentDescription("Back").performClick()
                 onNode(hasText("Tasks") and hasClickAction()).assertIsDisplayed()
                 onNode(hasText("Groups") and hasClickAction()).assertIsDisplayed()

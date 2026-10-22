@@ -36,6 +36,8 @@ import androidx.compose.ui.unit.dp
 import com.mkulikov.taskb.core.database.AppDatabase
 import com.mkulikov.taskb.feature.group.api.database.GroupEntity
 import com.mkulikov.taskb.feature.settings.api.IAppSettings
+import com.mkulikov.taskb.core.navigation.IAppNavigator
+import com.mkulikov.taskb.feature.group.api.GroupRoute
 import com.mkulikov.taskb.ui.theme.Palette
 import com.mkulikov.taskb.ui.theme.TaskBTheme
 import java.nio.file.Files
@@ -52,6 +54,7 @@ import org.koin.core.KoinApplication
 @OptIn(ExperimentalTestApi::class)
 class GroupNavigationUiTest {
     @TempDir lateinit var directory: Path
+    private lateinit var legacyNavigator: IAppNavigator
 
     @Test
     fun `create edit reopen cancel deletion and delete a group`() {
@@ -250,6 +253,7 @@ class GroupNavigationUiTest {
     }
 
     private fun SkikoComposeUiTest.setApp(application: KoinApplication, darkTheme: Boolean, contentWidth: State<Dp>? = null) {
+        legacyNavigator = application.koin.get()
         val settings = application.koin.get<IAppSettings>()
         setContent {
             KoinIsolatedContext(application) {
@@ -271,7 +275,8 @@ class GroupNavigationUiTest {
 
     private suspend fun SkikoComposeUiTest.openGroups() {
         waitUntil(timeoutMillis = 10_000) { onAllNodes(hasText("Groups") and hasClickAction()).fetchSemanticsNodes().isNotEmpty() }
-        onNode(hasText("Groups") and hasClickAction()).performClick()
+        // Keep regression coverage of feature:group after Home starts opening feature:task.
+        runOnIdle { legacyNavigator.navigate(GroupRoute) }
         waitUntil(timeoutMillis = 10_000) { onAllNodes(hasText("Groups")).fetchSemanticsNodes().isNotEmpty() }
     }
 

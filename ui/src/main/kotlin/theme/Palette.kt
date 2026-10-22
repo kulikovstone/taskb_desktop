@@ -4,6 +4,9 @@ import androidx.compose.ui.graphics.Color
 
 /** Material palette: s50–s900 are standard shades; a100–a700 are accent shades. */
 object Palette {
+    val White = Color.White
+    val Black = Color.Black
+
     object Red {
         val s50 = Color(0xFFFFEBEE)
         val s100 = Color(0xFFFFCDD2)
