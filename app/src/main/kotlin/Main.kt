@@ -34,7 +34,7 @@ fun main() {
                 onCloseRequest = ::exitApplication,
                 title = "TaskB",
                 icon = appIcon,
-                state = rememberWindowState(width = 960.dp, height = 640.dp)
+                state = rememberWindowState(width = 1100.dp, height = 800.dp)
             ) {
                 TaskBTheme {
                     TaskBApp(settings)
