@@ -12,7 +12,6 @@ dependencies {
     implementation(project(":core:navigation"))
     implementation(project(":feature:hello:api"))
     implementation(project(":feature:home:api"))
-    implementation(project(":feature:group"))
     implementation(project(":feature:hello"))
     implementation(project(":feature:home"))
     implementation(project(":feature:settings"))
@@ -25,7 +24,7 @@ dependencies {
     implementation(libs.koin.core)
     implementation(libs.koin.compose)
     testImplementation(libs.kotlin.test)
-    testImplementation(project(":feature:group:api"))
+    testImplementation(project(":feature:task:api"))
     testImplementation(libs.compose.ui.test)
     testImplementation(libs.navigation3.ui)
 }

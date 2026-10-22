@@ -1,15 +1,14 @@
 package com.mkulikov.taskb.feature.task.repository
 
 import androidx.compose.ui.graphics.toArgb
-import com.mkulikov.taskb.feature.group.api.database.GroupEntity
-import com.mkulikov.taskb.feature.group.api.database.IGroupDao
+import com.mkulikov.taskb.feature.task.api.database.GroupEntity
+import com.mkulikov.taskb.feature.task.api.database.IGroupDao
 import com.mkulikov.taskb.feature.task.model.Group
 import com.mkulikov.taskb.feature.task.model.GroupColor
 import kotlinx.coroutines.flow.emitAll
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.map
 
-/** Uses the existing groups table so both implementations see the same saved groups. */
 internal class GroupRepository(private val dao: Lazy<IGroupDao>) : IGroupRepository {
     override val groups = flow {
         emitAll(dao.value.observeGroups().map { entities -> entities.map { it.toGroup() } })
@@ -34,7 +33,6 @@ internal class GroupRepository(private val dao: Lazy<IGroupDao>) : IGroupReposit
         }
     }
 
-    // There is no task table yet. Both deletion choices currently remove only the empty group.
     override suspend fun delete(id: Int) = dao.value.deleteById(id)
 
     private fun GroupEntity.toGroup() = Group(id, name, GroupColor.fromArgb(color))

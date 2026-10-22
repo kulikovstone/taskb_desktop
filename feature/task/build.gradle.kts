@@ -16,7 +16,6 @@ dependencies {
     implementation(project(":core:database"))
     implementation(project(":core:mvi"))
     implementation(project(":core:navigation"))
-    implementation(project(":feature:group:api"))
     implementation(project(":feature:task:api"))
     implementation(libs.koin.core)
     implementation(libs.koin.compose)

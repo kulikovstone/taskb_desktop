@@ -1,8 +1,8 @@
-package com.mkulikov.taskb.feature.group.repository
+package com.mkulikov.taskb.feature.task.repository
 
 import com.mkulikov.taskb.core.database.AppDatabase
-import com.mkulikov.taskb.feature.group.model.Group
-import com.mkulikov.taskb.feature.group.model.GroupColor
+import com.mkulikov.taskb.feature.task.model.Group
+import com.mkulikov.taskb.feature.task.model.GroupColor
 import java.nio.file.Path
 import kotlin.test.assertEquals
 import kotlin.test.assertFailsWith

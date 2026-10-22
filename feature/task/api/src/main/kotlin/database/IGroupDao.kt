@@ -1,4 +1,4 @@
-package com.mkulikov.taskb.feature.group.api.database
+package com.mkulikov.taskb.feature.task.api.database
 
 import androidx.room3.Dao
 import androidx.room3.Insert

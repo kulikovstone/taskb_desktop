@@ -7,6 +7,7 @@ import androidx.sqlite.SQLiteException
 import androidx.sqlite.driver.bundled.BundledSQLiteDriver
 import androidx.sqlite.execSQL
 import com.mkulikov.taskb.feature.settings.api.database.ApplicationSetting
+import com.mkulikov.taskb.feature.task.api.database.GroupEntity
 import kotlinx.coroutines.runBlocking
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.io.TempDir
@@ -29,6 +30,30 @@ class AppDatabaseTest {
 
         AppDatabase.open(file).useDatabase { database ->
             assertEquals("saved", database.settingsDao().getValue("example"))
+            assertEquals(2L, database.queryLong("PRAGMA user_version"))
+        }
+    }
+
+    @Test
+    fun `existing version two database retains groups and settings`() = runBlocking {
+        val file = temporaryDirectory.resolve("existing.db")
+        BundledSQLiteDriver().open(file.toString()).use { connection ->
+            connection.execSQL("CREATE TABLE application_settings (`key` TEXT NOT NULL PRIMARY KEY, value TEXT NOT NULL)")
+            connection.execSQL(
+                "CREATE TABLE `groups` (id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, " +
+                    "name TEXT NOT NULL COLLATE NOCASE, color INTEGER NOT NULL)"
+            )
+            connection.execSQL("CREATE UNIQUE INDEX index_groups_name ON `groups` (name)")
+            connection.execSQL("INSERT INTO application_settings VALUES ('welcomeCompleted', 'true')")
+            connection.execSQL("INSERT INTO `groups` VALUES (7, 'Work', 123)")
+            connection.execSQL("CREATE TABLE room_master_table (id INTEGER PRIMARY KEY, identity_hash TEXT)")
+            connection.execSQL("INSERT INTO room_master_table VALUES (42, '1f6fcf3a57abd711d5a91fe555af4949')")
+            connection.execSQL("PRAGMA user_version = 2")
+        }
+
+        AppDatabase.open(file).useDatabase { database ->
+            assertEquals(GroupEntity(7, "Work", 123), database.groupDao().getById(7))
+            assertEquals("true", database.settingsDao().getValue("welcomeCompleted"))
             assertEquals(2L, database.queryLong("PRAGMA user_version"))
         }
     }

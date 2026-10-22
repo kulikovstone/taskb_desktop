@@ -15,7 +15,7 @@ kotlin {
 
 dependencies {
     api(libs.koin.core)
-    implementation(project(":feature:group:api"))
+    implementation(project(":feature:task:api"))
     implementation(project(":feature:settings:api"))
     api(libs.room.runtime)
     implementation(libs.sqlite.bundled)
