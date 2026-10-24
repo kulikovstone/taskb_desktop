@@ -14,7 +14,7 @@ internal class GroupEditorStore(
 ) : CoroutineStore<GroupEditorIntent, GroupEditorState, GroupEditorMessage>(
     GroupEditorState(
         isNew = groupId == null,
-        color = if (groupId == null) GroupColor.entries.random() else GroupColor.Transparent,
+        color = if (groupId == null) GroupColor.entries.random() else GroupColor.Grey,
     ), ::reduceGroupEditor, dispatcher,
 ) {
     private var loadRequested = false

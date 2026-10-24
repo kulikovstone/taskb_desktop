@@ -5,7 +5,6 @@ import androidx.compose.ui.graphics.toArgb
 import com.mkulikov.taskb.ui.theme.Palette
 
 internal enum class GroupColor(val label: String, val color: Color) {
-    Transparent("Transparent", Color.Transparent),
     Red("Red", Palette.Red.s400),
     Pink("Pink", Palette.Pink.s400),
     Purple("Purple", Palette.Purple.s400),
@@ -27,6 +26,6 @@ internal enum class GroupColor(val label: String, val color: Color) {
     BlueGrey("Blue grey", Palette.BlueGrey.s400);
 
     companion object {
-        fun fromArgb(argb: Int): GroupColor = entries.firstOrNull { it.color.toArgb() == argb } ?: Transparent
+        fun fromArgb(argb: Int): GroupColor = entries.firstOrNull { it.color.toArgb() == argb } ?: Grey
     }
 }

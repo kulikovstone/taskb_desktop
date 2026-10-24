@@ -168,20 +168,22 @@ class TaskGroupsNavigationUiTest {
                 waitForIdle()
                 onNodeWithText("Groups").assertDoesNotExist()
                 onNodeWithContentDescription("Group name").assertTextEquals("Work draft")
-                val wideColorStep = onNodeWithContentDescription("Red").fetchSemanticsNode().boundsInRoot.left -
-                    onNodeWithContentDescription("Transparent").fetchSemanticsNode().boundsInRoot.left
-                assertEquals(onNodeWithContentDescription("Transparent").fetchSemanticsNode().boundsInRoot.top,
+                onNodeWithContentDescription("Transparent").assertDoesNotExist()
+                val wideColorStep = onNodeWithContentDescription("Pink").fetchSemanticsNode().boundsInRoot.left -
+                    onNodeWithContentDescription("Red").fetchSemanticsNode().boundsInRoot.left
+                assertEquals(onNodeWithContentDescription("Red").fetchSemanticsNode().boundsInRoot.top,
                     onNodeWithContentDescription("Blue grey").fetchSemanticsNode().boundsInRoot.top, 0.5f)
                 runOnIdle { width.value = 840.dp }
                 waitText("Groups")
                 onNodeWithContentDescription("Group name").assertTextEquals("Work draft")
-                assertEquals(wideColorStep, onNodeWithContentDescription("Red").fetchSemanticsNode().boundsInRoot.left -
-                    onNodeWithContentDescription("Transparent").fetchSemanticsNode().boundsInRoot.left, 0.5f)
+                assertEquals(wideColorStep, onNodeWithContentDescription("Pink").fetchSemanticsNode().boundsInRoot.left -
+                    onNodeWithContentDescription("Red").fetchSemanticsNode().boundsInRoot.left, 0.5f)
                 assertTrue(onNodeWithContentDescription("Blue grey").fetchSemanticsNode().boundsInRoot.top >
-                    onNodeWithContentDescription("Transparent").fetchSemanticsNode().boundsInRoot.top)
+                    onNodeWithContentDescription("Red").fetchSemanticsNode().boundsInRoot.top)
                 onNodeWithContentDescription("Close group").performClick()
                 onNodeWithText("New group").performClick()
                 waitText("Create group")
+                onNodeWithContentDescription("Transparent").assertDoesNotExist()
                 onNodeWithContentDescription("Group name").assertIsFocused()
                 onNodeWithContentDescription("Group name").performTextInput("Travel draft")
                 onNodeWithContentDescription("Orange").performClick()
@@ -189,8 +191,8 @@ class TaskGroupsNavigationUiTest {
                 waitForIdle()
                 onNodeWithContentDescription("Group name").assertTextEquals("Travel draft")
                 onNodeWithContentDescription("Orange").assertIsSelected()
-                assertTrue(onNodeWithContentDescription("Light blue").fetchSemanticsNode().boundsInRoot.top >
-                    onNodeWithContentDescription("Transparent").fetchSemanticsNode().boundsInRoot.top)
+                assertTrue(onNodeWithContentDescription("Cyan").fetchSemanticsNode().boundsInRoot.top >
+                    onNodeWithContentDescription("Red").fetchSemanticsNode().boundsInRoot.top)
                 runOnIdle { width.value = 1280.dp }
                 waitText("Create group")
                 screenshot("task-groups-wide-new-light")

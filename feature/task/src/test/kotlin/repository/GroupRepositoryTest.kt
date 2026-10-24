@@ -1,6 +1,8 @@
 package com.mkulikov.taskb.feature.task.repository
 
+import androidx.compose.ui.graphics.toArgb
 import com.mkulikov.taskb.core.database.AppDatabase
+import com.mkulikov.taskb.feature.task.api.database.GroupEntity
 import com.mkulikov.taskb.feature.task.model.Group
 import com.mkulikov.taskb.feature.task.model.GroupColor
 import java.nio.file.Path
@@ -55,14 +57,29 @@ class GroupRepositoryTest {
         try {
             val repository = GroupRepository(lazy { database.groupDao() })
             repository.add("Personal", GroupColor.LightGreen)
-            repository.add("Without a color", GroupColor.Transparent)
+            repository.add("Work", GroupColor.Blue)
         } finally { database.close() }
         val reopened = AppDatabase.open(file)
         try {
             val groups = GroupRepository(lazy { reopened.groupDao() }).groups.first()
-            assertEquals(listOf("Personal", "Without a color"), groups.map { it.name })
-            assertEquals(listOf(GroupColor.LightGreen, GroupColor.Transparent), groups.map { it.color })
+            assertEquals(listOf("Personal", "Work"), groups.map { it.name })
+            assertEquals(listOf(GroupColor.LightGreen, GroupColor.Blue), groups.map { it.color })
         } finally { reopened.close() }
+    }
+
+    @Test
+    fun `legacy transparent groups use an opaque color and save it on editing`() = runBlocking {
+        val database = AppDatabase.open(directory.resolve("groups.db"))
+        try {
+            val dao = database.groupDao()
+            val id = dao.insert(GroupEntity(name = "Legacy", color = 0)).toInt()
+            val repository = GroupRepository(lazy { dao })
+            val group = assertNotNull(repository.getById(id))
+            assertEquals(GroupColor.Grey, group.color)
+            assertEquals(group, repository.groups.first().single())
+            assertEquals(GroupWriteResult.Saved, repository.update(group.copy(name = "Renamed")))
+            assertEquals(GroupColor.Grey.color.toArgb(), assertNotNull(dao.getById(id)).color)
+        } finally { database.close() }
     }
 
     @Test

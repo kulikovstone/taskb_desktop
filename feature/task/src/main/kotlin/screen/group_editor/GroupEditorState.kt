@@ -7,7 +7,7 @@ internal data class GroupEditorState(
     val isNew: Boolean,
     val original: Group? = null,
     val name: String = "",
-    val color: GroupColor = GroupColor.Transparent,
+    val color: GroupColor = GroupColor.Grey,
     val isLoading: Boolean = !isNew,
     val isSaving: Boolean = false,
     val isDeleting: Boolean = false,
