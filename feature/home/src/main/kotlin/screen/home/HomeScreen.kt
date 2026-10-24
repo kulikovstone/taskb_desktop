@@ -7,12 +7,15 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.ContentAlpha
 import androidx.compose.material.MaterialTheme
+import androidx.compose.material.Surface
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.mkulikov.taskb.ui.button.TaskBButton
+import com.mkulikov.taskb.ui.theme.TaskBTheme
 
 @Composable
 internal fun HomeScreen(
@@ -35,5 +38,19 @@ internal fun HomeScreen(
             style = MaterialTheme.typography.caption,
             color = MaterialTheme.colors.onSurface.copy(alpha = ContentAlpha.medium),
         )
+    }
+}
+
+@Preview(name = "Home", widthDp = 800, heightDp = 600)
+@Composable
+private fun HomeScreenPreview() {
+    TaskBTheme(darkTheme = false) {
+        Surface(color = TaskBTheme.colors.surface) {
+            HomeScreen(
+                appVersion = "Preview",
+                onTasksClick = {},
+                onGroupsClick = {},
+            )
+        }
     }
 }

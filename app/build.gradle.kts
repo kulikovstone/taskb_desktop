@@ -19,6 +19,7 @@ dependencies {
     implementation(project(":feature:task"))
     implementation(compose.desktop.currentOs)
     implementation(libs.compose.material)
+    implementation(libs.compose.ui.toolingPreview)
     implementation(libs.bundles.materialSymbols)
     implementation(libs.kotlinx.coroutines.core)
     implementation(libs.koin.core)

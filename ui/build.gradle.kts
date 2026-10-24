@@ -1,6 +1,7 @@
 plugins {
     alias(libs.plugins.kotlin.jvm)
     `java-library`
+    alias(libs.plugins.compose.multiplatform)
     alias(libs.plugins.compose.compiler)
 }
 
@@ -13,6 +14,7 @@ kotlin {
 }
 
 dependencies {
+    implementation(libs.compose.ui.toolingPreview)
     implementation(libs.materialSymbols.outlined)
     api(libs.compose.runtime)
     api(libs.compose.ui)
