@@ -1,8 +1,6 @@
 package com.mkulikov.taskb.feature.task.screen.group_editor
 
-import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.FlowRow
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -11,18 +9,13 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.semantics.contentDescription
-import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.unit.dp
-import com.mkulikov.taskb.feature.task.component.GroupButton
 import com.mkulikov.taskb.feature.task.component.GroupColorPicker
 import com.mkulikov.taskb.feature.task.component.GroupLoadError
 import com.mkulikov.taskb.feature.task.component.GroupLoading
 import com.mkulikov.taskb.feature.task.component.GroupStatistics
 import com.mkulikov.taskb.feature.task.component.GroupTextField
-import com.mkulikov.taskb.ui.icon.TaskBIcons
 import com.mkulikov.taskb.ui.theme.TaskBTheme
 
 @Composable
@@ -31,6 +24,7 @@ internal fun GroupEditorForm(
     onIntent: (GroupEditorIntent) -> Unit,
     modifier: Modifier,
     autoFocusName: Boolean = false,
+    actions: @Composable (() -> Unit)? = null,
 ) {
     when {
         state.isLoading -> GroupLoading(modifier)
@@ -52,20 +46,9 @@ internal fun GroupEditorForm(
             )
             Spacer(Modifier.height(24.dp))
             GroupColorPicker(state.color, { onIntent(GroupEditorIntent.ColorChanged(it)) }, enabled)
-            Spacer(Modifier.height(48.dp))
-            FlowRow(
-                modifier = Modifier.fillMaxWidth(),
-                horizontalArrangement = Arrangement.spacedBy(12.dp, Alignment.End),
-                verticalArrangement = Arrangement.spacedBy(12.dp),
-            ) {
-                if (!state.isNew) {
-                    GroupButton("Delete", TaskBIcons.Delete, { onIntent(GroupEditorIntent.PrepareDelete) }, enabled = enabled, destructive = true)
-                }
-                GroupButton(
-                    label = if (state.isNew) "Create group" else "Save changes", icon = if (state.isNew) TaskBIcons.Add else TaskBIcons.Done,
-                    onClick = { onIntent(GroupEditorIntent.Save) }, enabled = state.canSave,
-                    modifier = Modifier.semantics { contentDescription = "Save group" },
-                )
+            if (actions != null) {
+                Spacer(Modifier.height(48.dp))
+                actions()
             }
             if (state.isSaving || state.isDeleting) Text(if (state.isDeleting) "Deleting…" else "Saving…", style = TaskBTheme.typography.small, color = colors.muted)
         }

@@ -71,6 +71,7 @@ class TaskGroupsNavigationUiTest {
                 onNodeWithContentDescription("Search groups").assertIsDisplayed()
                 onNodeWithContentDescription("Add group").performClick()
                 onNodeWithContentDescription("Save group").assertIsNotEnabled()
+                assertCompactEditorActions(isNew = true)
                 onNodeWithText("Planned").assertDoesNotExist()
                 onNodeWithContentDescription("Group name").assertIsFocused()
                 onNodeWithContentDescription("Clear group name").assertDoesNotExist()
@@ -99,6 +100,7 @@ class TaskGroupsNavigationUiTest {
                 onNodeWithText("Travel").performClick()
                 waitText("Planned")
                 onNodeWithContentDescription("Save group").assertIsNotEnabled()
+                assertCompactEditorActions(isNew = false)
                 onNodeWithContentDescription("Group name").performTextReplacement("Work")
                 onNodeWithContentDescription("Blue").performClick()
                 screenshot("task-groups-compact-edit-light")
@@ -115,10 +117,10 @@ class TaskGroupsNavigationUiTest {
                 onNodeWithText("Work").performClick()
                 waitText("Planned")
                 onNodeWithText("Delete with tasks").assertDoesNotExist()
-                onNodeWithText("Delete").performClick()
+                onNodeWithContentDescription("Delete group").performClick()
                 waitText("Delete group")
                 onNodeWithText("Cancel").performClick()
-                onNodeWithText("Delete").performClick()
+                onNodeWithContentDescription("Delete group").performClick()
                 waitText("Delete group")
                 onNode(hasText("Delete") and hasAnyAncestor(isDialog())).performClick()
                 waitText("No groups yet.")
@@ -143,12 +145,8 @@ class TaskGroupsNavigationUiTest {
                 onNodeWithContentDescription("Green").performClick()
                 runOnIdle { width.value = 300.dp }
                 waitForIdle()
-                val deleteBounds = onNodeWithText("Delete").assertIsDisplayed().fetchSemanticsNode().boundsInRoot
-                val saveBounds = onNodeWithContentDescription("Save group").assertIsDisplayed().fetchSemanticsNode().boundsInRoot
-                assertTrue(saveBounds.top > deleteBounds.bottom)
-                assertEquals(onNodeWithContentDescription("Group name").fetchSemanticsNode().boundsInRoot.right, saveBounds.right, 0.5f)
-                assertEquals(deleteBounds.right, saveBounds.right, 0.5f)
-                screenshot("task-groups-compact-actions-wrapped-light")
+                assertCompactEditorActions(isNew = false)
+                screenshot("task-groups-compact-actions-light")
                 runOnIdle { width.value = 1280.dp }
                 waitText("Save changes")
                 onNodeWithContentDescription("Group name").assertTextEquals("Work draft")
@@ -191,6 +189,7 @@ class TaskGroupsNavigationUiTest {
                 waitForIdle()
                 onNodeWithContentDescription("Group name").assertTextEquals("Travel draft")
                 onNodeWithContentDescription("Orange").assertIsSelected()
+                assertCompactEditorActions(isNew = true)
                 assertTrue(onNodeWithContentDescription("Cyan").fetchSemanticsNode().boundsInRoot.top >
                     onNodeWithContentDescription("Red").fetchSemanticsNode().boundsInRoot.top)
                 runOnIdle { width.value = 1280.dp }
@@ -269,11 +268,16 @@ class TaskGroupsNavigationUiTest {
                     assertEquals(bottom, form.fetchSemanticsNode().boundsInRoot.bottom, 0.5f)
                     onNodeWithText("Delete with tasks").assertDoesNotExist()
                     onNodeWithText("Actions").assertDoesNotExist()
-                    val delete = onNodeWithText("Delete")
-                    delete.performScrollTo().assertIsDisplayed()
-                    val deleteBounds = delete.fetchSemanticsNode().boundsInRoot
-                    val saveBounds = onNodeWithContentDescription("Save group").fetchSemanticsNode().boundsInRoot
-                    assertEquals(saveBounds.center.y, deleteBounds.center.y, 0.5f)
+                    if (availableWidth == 400.dp) {
+                        onNodeWithContentDescription("Blue grey").performScrollTo().assertIsDisplayed()
+                        assertCompactEditorActions(isNew = false)
+                    } else {
+                        val delete = onNodeWithText("Delete")
+                        delete.performScrollTo().assertIsDisplayed()
+                        val deleteBounds = delete.fetchSemanticsNode().boundsInRoot
+                        val saveBounds = onNodeWithContentDescription("Save group").fetchSemanticsNode().boundsInRoot
+                        assertEquals(saveBounds.center.y, deleteBounds.center.y, 0.5f)
+                    }
                     screenshot(if (availableWidth == 400.dp) "task-groups-compact-bottom-edge" else "task-groups-wide-bottom-edge")
                     onNodeWithContentDescription(if (availableWidth == 400.dp) "Back" else "Close group").performClick()
                     waitText("8 groups")
@@ -310,7 +314,27 @@ class TaskGroupsNavigationUiTest {
 
     private suspend fun SkikoComposeUiTest.saveGroup() {
         waitForIdle()
-        onNodeWithContentDescription("Save group").performScrollTo().performClick()
+        onNodeWithContentDescription("Save group").assertIsDisplayed().performClick()
+    }
+
+    private fun SkikoComposeUiTest.assertCompactEditorActions(isNew: Boolean) {
+        val backBounds = onNodeWithContentDescription("Back").fetchSemanticsNode().boundsInRoot
+        val saveBounds = onNodeWithContentDescription("Save group").assertIsDisplayed().fetchSemanticsNode().boundsInRoot
+        assertEquals(backBounds.center.y, saveBounds.center.y, 0.5f)
+        assertTrue(saveBounds.left >= backBounds.right)
+        onNode(hasContentDescription("Save group") and hasAnyAncestor(hasScrollAction())).assertDoesNotExist()
+        onNodeWithText("Create group").assertDoesNotExist()
+        onNodeWithText("Save changes").assertDoesNotExist()
+        onNodeWithText("Delete").assertDoesNotExist()
+        if (isNew) {
+            onNodeWithContentDescription("Delete group").assertDoesNotExist()
+        } else {
+            val deleteBounds = onNodeWithContentDescription("Delete group").assertIsDisplayed().fetchSemanticsNode().boundsInRoot
+            assertEquals(backBounds.center.y, deleteBounds.center.y, 0.5f)
+            assertTrue(deleteBounds.left >= backBounds.right)
+            assertTrue(deleteBounds.right <= saveBounds.left)
+            onNode(hasContentDescription("Delete group") and hasAnyAncestor(hasScrollAction())).assertDoesNotExist()
+        }
     }
 
     private suspend fun SkikoComposeUiTest.waitText(text: String) {
