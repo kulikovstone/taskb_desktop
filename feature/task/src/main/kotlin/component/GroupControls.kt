@@ -26,9 +26,7 @@ import androidx.compose.material.CircularProgressIndicator
 import androidx.compose.material.Icon
 import androidx.compose.material.Text
 import androidx.compose.material.TextButton
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Cancel
-import androidx.compose.material.icons.filled.Search
+import com.mkulikov.taskb.ui.icon.TaskBIcons
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
@@ -116,7 +114,7 @@ internal fun GroupTextField(
             decorationBox = { inner ->
                 Row(Modifier.fillMaxSize().padding(horizontal = 12.dp), verticalAlignment = Alignment.CenterVertically) {
                     if (search) {
-                        Icon(Icons.Default.Search, contentDescription = null, tint = colors.muted, modifier = Modifier.size(18.dp))
+                        Icon(TaskBIcons.Search, contentDescription = null, tint = colors.muted, modifier = Modifier.size(18.dp))
                         Spacer(Modifier.width(8.dp))
                     }
                     Box(Modifier.weight(1f), contentAlignment = Alignment.CenterStart) {
@@ -141,7 +139,7 @@ internal fun GroupTextField(
                 contentAlignment = Alignment.Center,
             ) {
                 Icon(
-                    Icons.Default.Cancel,
+                    TaskBIcons.Cancel,
                     contentDescription = "Clear ${description.lowercase(Locale.ROOT)}",
                     tint = colors.clearIcon,
                     modifier = Modifier.size(24.dp),

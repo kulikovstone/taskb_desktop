@@ -1,6 +1,7 @@
 package com.mkulikov.taskb.core.database
 
 import androidx.room3.Database
+import androidx.room3.AutoMigration
 import androidx.room3.Room
 import androidx.room3.RoomDatabase
 import androidx.sqlite.SQLiteConnection
@@ -8,16 +9,23 @@ import androidx.sqlite.SQLiteDriver
 import androidx.sqlite.driver.bundled.BundledSQLiteDriver
 import com.mkulikov.taskb.feature.task.api.database.IGroupDao
 import com.mkulikov.taskb.feature.task.api.database.GroupEntity
+import com.mkulikov.taskb.feature.task.api.database.TaskEntity
+import com.mkulikov.taskb.feature.task.api.database.ITaskDao
 import com.mkulikov.taskb.feature.settings.api.database.IAppSettingsDao
 import com.mkulikov.taskb.feature.settings.api.database.ApplicationSetting
 import kotlinx.coroutines.Dispatchers
 import java.nio.file.Files
 import java.nio.file.Path
 
-@Database(entities = [ApplicationSetting::class, GroupEntity::class], version = 2)
+@Database(
+    entities = [ApplicationSetting::class, GroupEntity::class, TaskEntity::class],
+    version = 3,
+    autoMigrations = [AutoMigration(from = 2, to = 3)],
+)
 abstract class AppDatabase : RoomDatabase() {
     abstract fun settingsDao(): IAppSettingsDao
     abstract fun groupDao(): IGroupDao
+    abstract fun taskDao(): ITaskDao
 
     companion object {
         fun open(file: Path = DatabasePaths.databaseFile()): AppDatabase {

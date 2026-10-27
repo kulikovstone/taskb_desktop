@@ -74,10 +74,10 @@ class AppNavigationUiTest {
                 assertTrue(versionBounds.center.y > screenBounds.top + screenBounds.height * 0.8f)
 
                 onNode(hasText("Tasks") and hasClickAction()).performClick()
-                onNodeWithText("Назад").assertIsDisplayed()
-                onNodeWithText("Задачи").assertIsDisplayed()
+                onNodeWithContentDescription("Back").assertIsDisplayed()
+                onNodeWithText("Tasks").assertIsDisplayed()
                 onNode(hasText("Groups") and hasClickAction()).assertDoesNotExist()
-                onNodeWithText("Назад").performClick()
+                onNodeWithContentDescription("Back").performClick()
                 onNode(hasText("Tasks") and hasClickAction()).assertIsDisplayed()
                 onNode(hasText("Groups") and hasClickAction()).assertIsDisplayed()
                 onNodeWithText("Version ${AppVersion.value}").assertIsDisplayed()

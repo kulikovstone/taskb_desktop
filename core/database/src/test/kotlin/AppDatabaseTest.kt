@@ -30,7 +30,7 @@ class AppDatabaseTest {
 
         AppDatabase.open(file).useDatabase { database ->
             assertEquals("saved", database.settingsDao().getValue("example"))
-            assertEquals(2L, database.queryLong("PRAGMA user_version"))
+            assertEquals(3L, database.queryLong("PRAGMA user_version"))
         }
     }
 
@@ -54,7 +54,7 @@ class AppDatabaseTest {
         AppDatabase.open(file).useDatabase { database ->
             assertEquals(GroupEntity(7, "Work", 123), database.groupDao().getById(7))
             assertEquals("true", database.settingsDao().getValue("welcomeCompleted"))
-            assertEquals(2L, database.queryLong("PRAGMA user_version"))
+            assertEquals(3L, database.queryLong("PRAGMA user_version"))
         }
     }
 
@@ -105,7 +105,7 @@ class AppDatabaseTest {
         driver.open(file.toString()).use { connection ->
             connection.execSQL("CREATE TABLE future_data (value TEXT NOT NULL)")
             connection.execSQL("INSERT INTO future_data VALUES ('preserved')")
-            connection.execSQL("PRAGMA user_version = 3")
+            connection.execSQL("PRAGMA user_version = 4")
         }
 
         AppDatabase.open(file).useDatabase { database ->
@@ -121,7 +121,7 @@ class AppDatabaseTest {
             }
             connection.prepare("PRAGMA user_version").use {
                 assertTrue(it.step())
-                assertEquals(3L, it.getLong(0))
+                assertEquals(4L, it.getLong(0))
             }
         }
     }
@@ -136,7 +136,7 @@ class AppDatabaseTest {
         }
         AppDatabase.open(file).useDatabase { database ->
             assertNull(database.settingsDao().getValue("welcomeCompleted"))
-            assertEquals(2L, database.queryLong("PRAGMA user_version"))
+            assertEquals(3L, database.queryLong("PRAGMA user_version"))
             assertEquals(0L, database.queryLong("SELECT COUNT(*) FROM `groups`"))
         }
     }

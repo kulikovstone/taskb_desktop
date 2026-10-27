@@ -16,6 +16,7 @@ kotlin {
 dependencies {
     implementation(libs.compose.ui.toolingPreview)
     implementation(libs.materialSymbols.outlined)
+    implementation(libs.materialSymbols.outlinedFilled)
     api(libs.compose.runtime)
     api(libs.compose.ui)
     api(libs.compose.foundation)
